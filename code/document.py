@@ -15,9 +15,10 @@ class Doc:
 
     @classmethod
     def from_query(cls, phrase):
-        self.doc_id = -1
-        self.title = ""
-        self.text = Doc.clean_text(phrase)
+        doc_id = -1
+        title = []
+        text = Doc.clean_text(phrase)
+        return cls(doc_id, title, text)
 
     @property
     def bag_of_words(self):
