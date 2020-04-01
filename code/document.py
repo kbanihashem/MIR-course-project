@@ -8,10 +8,18 @@ class Doc:
         self.doc_id = doc_id
         self.title = title
         self.text = text
+        self._distinct_terms = None
 
     @property
-    def info_iterator(self):
+    def distinct_terms(self):
+        if self._distinct_terms is not None:
+            self._distinct_terms = set(map(lambda word_pos_part: word_pos_part[0], self.info_iterator))
+        return self._distinct_terms
 
+        
+    @property
+    def info_iterator(self):
+        """returns word_pos_part"""
         for i, word in enumerate(self.title):
             yield (word, i + 1, 'title')
 
