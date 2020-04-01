@@ -1,3 +1,6 @@
+import xml.etree.ElementTree as ET
+import re
+
 class Doc:
     persian_regex = '[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی ]+'
 

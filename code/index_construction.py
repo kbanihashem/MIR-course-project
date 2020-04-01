@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 import re
+
 from document import Doc
+
 class RetrievalIndex:
 
     def __init__(self):

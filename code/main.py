@@ -1,3 +1,6 @@
+from document import Doc
+from index_construction import RetrievalIndex
+
 def main():
     test4()
 
