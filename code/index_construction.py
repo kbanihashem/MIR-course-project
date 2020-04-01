@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import re
+import numpy as np
 
 from document import Doc
 
@@ -54,14 +55,53 @@ class RetrievalIndex:
         if not posting_list:
             del self.index[word]
 
+    def tf(self, term, doc_id, method='l'):
+        methods_supported = 'l'
+        if method not in methods_supported:
+            raise ValueError('method shoud be in "%s"', methods_supported)
+        posting_list = self.get_posting_list(term)
 
-    def get_posting_list(self, word):
-        return self.index.setdefault(word, {})
+        if doc_id not in posting_list:
+            tf = 0
+        else:
+            li = posting_list[doc_id]
+            tf = sum(len(li[part]) for part in li)
+        
+        if method == 'l':
+            return 1 + np.log(tf) if tf > 0 else 0
+
+    def idf(self, term, method='n'):
+
+        methods_supported = 'ntp'
+        if method not in methods_supported:
+            raise ValueError('method shoud be in "%s"', methods_supported)
+
+        if method == 'n':
+            return 1
+
+        df = len(self.get_posting_list(term))
+
+        if method == 't':
+            return np.log(self.N/df)
+
+        if method == 'p':
+            return max(0, np.log((self.N - df)/df)
+
+
+    def get_posting_list(self, word, raise_on_not_exists=True):
+
+        if raise_on_not_exists and word not in self.index:
+            raise ValueError('term not in index')
+
+        return self.index.getdefault(word, {})
 
     @classmethod
     def construct_from_wiki(cls, xml):
         tree = ET.parse(xml)
 
+    @property
+    def N(self):
+        return len(self.docs)
 
     def __str__(self):
         ans = ""
