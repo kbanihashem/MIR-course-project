@@ -92,6 +92,26 @@ class RetrievalIndex:
     def tf_idf(self, term, doc_id, method='ln'):
         return self.tf(term, doc_id, method=method[0]) * self.idf(term, method=method[1])
 
+    def query(self, query, method='ltn-lnn', k=1, flatten=True, query_type='Doc'):
+        if query_type == 'phrase':
+            query = Doc.from_query(query)
+
+        self.make_vectors(method[:3])
+        v, const = query.tf_idf(method[4:])
+        scores = []
+        for doc_id, vec in self.vecs:
+            score = 0
+            for term, w_q in v:
+                score += vec.getdefault(term, 0) * w_q
+            scores.append((doc_id, score / const / self.consts[doc_id]))
+
+        scores.sort(key=lambda x: x[1])
+        top_k = [scores[i][0] for i in range(min(k, len(scores)))]
+        if k == 1 and flatten:
+            return top_k[0]
+        else:
+            return top_k
+
     def get_posting_list(self, word, raise_on_not_exists=True):
 
         if raise_on_not_exists and word not in self.index:
@@ -111,7 +131,6 @@ class RetrievalIndex:
 
             self.vecs[doc_id] = v
             self.consts[doc_id] = normalization_factor
-            
 
     @classmethod
     def construct_from_wiki(cls, xml):

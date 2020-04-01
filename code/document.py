@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import re
 from collections import Counter
 import numpy as np
+from hazm import Normalizer, word_tokenize, Stemmer
 
 class Doc:
     persian_regex = '[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی ]+'
@@ -11,6 +12,12 @@ class Doc:
         self.title = title
         self.text = text
         self._bag_of_words = None
+
+    @classmethod
+    def from_query(cls, phrase):
+        self.doc_id = -1
+        self.title = ""
+        self.text = Doc.clean_text(phrase)
 
     @property
     def bag_of_words(self):
@@ -112,7 +119,28 @@ class Doc:
     def clean_text(text):
         text = re.sub(Doc.persian_regex, ' ', text)
         text = re.sub('[ ]+', ' ', text)
-        return text
+        return prepare_text(text)
+
+    def prepare_text(raw_text):    
+        normalizer = Normalizer()
+        #normalize
+        normized_text = normalizer.normalize(raw_text)
+        #tokenize
+        tokenized = word_tokenize(normized_text)
+        
+        #نگارشی
+        punc_list = '.،؟!؛'
+        def fix_word(w):
+            for c in punc_list:
+                w = w.replace(c, '')
+            return "$" if w == "" else w
+        
+        punc_free = filter(lambda x: x != '$', map(fix_word, tokenized))
+        
+        stemmer = Stemmer()
+        stemmed_list = list(map(stemmer.stem, punc_free))
+        
+        return stemmed_list
 
     def __str__(self):
         ans = "Doc:\n"
