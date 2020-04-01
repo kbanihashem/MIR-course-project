@@ -133,6 +133,13 @@ class RetrievalIndex:
             self.consts[doc_id] = normalization_factor
 
     @classmethod
+    def from_xml(cls, xml, max_num=None, method='file'):
+        index = cls()
+        for doc in Doc.create_list_from_xml(max_num=max_num, method=method):
+            index.add_doc(doc)
+        return index
+
+    @classmethod
     def construct_from_wiki(cls, xml):
         tree = ET.parse(xml)
 

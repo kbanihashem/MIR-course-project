@@ -1,8 +1,13 @@
 from document import Doc
 from index_construction import RetrievalIndex
 
+XML_PATH = '../data/Persian.xml'
 def main():
-    test4()
+    test5()
+
+def test5():
+    index = RetrievalIndex.from_xml(XML_PATH, max_num=2)
+    print(index)
 
 def test4():
     doc = Doc.create_from_xml_file('test_doc.xml')
