@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 import re
+from collections import Counter
+import numpy as np
 
 class Doc:
     persian_regex = '[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی ]+'
@@ -8,14 +10,17 @@ class Doc:
         self.doc_id = doc_id
         self.title = title
         self.text = text
-        self._distinct_terms = None
+        self._bag_of_words = None
+
+    @property
+    def bag_of_words(self):
+        if self._bag_of_words is not None:
+            self._bag_of_words = Counter(self.info_iterator)
+        return self._bag_of_words
 
     @property
     def distinct_terms(self):
-        if self._distinct_terms is not None:
-            self._distinct_terms = set(map(lambda word_pos_part: word_pos_part[0], self.info_iterator))
-        return self._distinct_terms
-
+        return self.bag_of_words.keys()
         
     @property
     def info_iterator(self):
@@ -42,7 +47,7 @@ class Doc:
 
         li = []
         for i, doc_root in enumerate(root):
-            print(i, ':', end=' ')
+            #print(i, ':', end=' ')
             if max_num is not None and i >= max_num:
                 break
             li.append(cls.create_from_xml(doc_root, method='root'))
@@ -118,3 +123,22 @@ class Doc:
     def __repr__(self):
         return str(self).replace("\n", "\\n").replace("\t", "\\t")
     
+    def tf_idf(self, method):
+        v = dict()
+        for word, count in self.bag_of_words:
+            v[word] = Doc.transform_tf(count, method[0]) 
+
+        if method[3] == 'n':
+            const = 1
+        elif method[3] == 'c':
+            const = np.sqrt(sum(map(lambda x: x**2, v.values())))
+        return v, const
+
+    @staticmethod
+    def transform_tf(tf, method='l'):
+        methods_supported = "l"
+        if method not in methods_supported:
+            raise ValueError("method should be in '%s'" % methods_supported)
+
+        if method == 'l':
+            return 1 + np.log(tf) if tf > 0 else 0
