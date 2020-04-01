@@ -92,20 +92,20 @@ class RetrievalIndex:
     def tf_idf(self, term, doc_id, method='ln'):
         return self.tf(term, doc_id, method=method[0]) * self.idf(term, method=method[1])
 
-    def query(self, query, method='ltn-lnn', k=1, flatten=True, query_type='Doc'):
+    def query(self, query, method='ltn-lnn', k=1, flatten=True, query_type='phrase'):
         if query_type == 'phrase':
             query = Doc.from_query(query)
 
         self.make_vectors(method[:3])
         v, const = query.tf_idf(method[4:])
         scores = []
-        for doc_id, vec in self.vecs:
+        for doc_id, vec in self.vecs.items():
             score = 0
-            for term, w_q in v:
-                score += vec.getdefault(term, 0) * w_q
+            for term, w_q in v.items():
+                score += vec.get(term, 0) * w_q
             scores.append((doc_id, score / const / self.consts[doc_id]))
 
-        scores.sort(key=lambda x: x[1])
+        scores.sort(key=lambda x: x[1], reverse=True)
         top_k = [scores[i][0] for i in range(min(k, len(scores)))]
         if k == 1 and flatten:
             return top_k[0]
@@ -117,12 +117,19 @@ class RetrievalIndex:
         if raise_on_not_exists and word not in self.index:
             raise ValueError('term not in index')
 
-        return self.index.getdefault(word, {})
+        return self.index.get(word, {})
 
     def make_vectors(self, method='lnn'):
+        self.vecs = {}
+        self.consts = {}
         for doc_id, doc in self.docs.items():
             v = dict()
             for term in doc.distinct_terms:
+                #DEBUG
+#                print(term)
+#                if term not in self.index:
+#                    raise ValueError('PROBLEMO')
+                #_DEBUG
                 v[term] = self.tf_idf(term, doc_id, method=method[:2]) 
             if method[2] == 'n':
                 normalization_factor = 1
@@ -135,7 +142,7 @@ class RetrievalIndex:
     @classmethod
     def from_xml(cls, xml, max_num=None, method='file'):
         index = cls()
-        for doc in Doc.create_list_from_xml(max_num=max_num, method=method):
+        for doc in Doc.create_list_from_xml(xml, max_num=max_num, method=method):
             index.add_doc(doc)
         return index
 

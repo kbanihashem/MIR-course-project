@@ -6,9 +6,10 @@ def main():
     test5()
 
 def test5():
-    index = RetrievalIndex.from_xml(XML_PATH, max_num=2)
-    print(index)
-
+    index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
+    q = index.query('مسابقات فوتبال المپیک', query_type='phrase', k=10)
+    print(q)
+    
 def test4():
     doc = Doc.create_from_xml_file('test_doc.xml')
     print(doc)

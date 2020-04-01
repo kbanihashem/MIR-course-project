@@ -22,8 +22,8 @@ class Doc:
 
     @property
     def bag_of_words(self):
-        if self._bag_of_words is not None:
-            self._bag_of_words = Counter(self.info_iterator)
+        if self._bag_of_words is None:
+            self._bag_of_words = Counter(map(lambda word_pos_part: word_pos_part[0], self.info_iterator))
         return self._bag_of_words
 
     @property
@@ -83,8 +83,8 @@ class Doc:
     def __str__(self):
         ans = ""
         ans += "ID: %s\n" % self.doc_id
-        ans += "Title: %s\n\n" % self.title
-        ans += self.text
+        ans += "Title: %s\n\n" % ' '.join(self.title)
+        ans += ' '.join(self.text)
         return ans
     
     @staticmethod
@@ -120,7 +120,7 @@ class Doc:
     def clean_text(text):
         text = re.sub(Doc.persian_regex, ' ', text)
         text = re.sub('[ ]+', ' ', text)
-        return prepare_text(text)
+        return Doc.prepare_text(text)
 
     def prepare_text(raw_text):    
         normalizer = Normalizer()
@@ -139,27 +139,21 @@ class Doc:
         punc_free = filter(lambda x: x != '$', map(fix_word, tokenized))
         
         stemmer = Stemmer()
-        stemmed_list = list(map(stemmer.stem, punc_free))
+        stemmed_list = list(filter(lambda x: x != '', map(stemmer.stem, punc_free)))
         
         return stemmed_list
-
-    def __str__(self):
-        ans = "Doc:\n"
-        ans += "\ttitle: %s\n" % self.title
-        ans += "\ttext: %s..." % self.text[:20].replace("\n", "\\n")
-        return ans
 
     def __repr__(self):
         return str(self).replace("\n", "\\n").replace("\t", "\\t")
     
     def tf_idf(self, method):
         v = dict()
-        for word, count in self.bag_of_words:
+        for word, count in self.bag_of_words.items():
             v[word] = Doc.transform_tf(count, method[0]) 
 
-        if method[3] == 'n':
+        if method[2] == 'n':
             const = 1
-        elif method[3] == 'c':
+        elif method[2] == 'c':
             const = np.sqrt(sum(map(lambda x: x**2, v.values())))
         return v, const
 
