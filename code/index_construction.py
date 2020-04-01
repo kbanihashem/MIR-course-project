@@ -99,7 +99,7 @@ class RetrievalIndex:
 
         return self.index.getdefault(word, {})
 
-    def make_vector_list(self, method='lnn'):
+    def make_vectors(self, method='lnn'):
         for doc_id, doc in self.docs.items():
             v = dict()
             for term in doc.distinct_terms:
