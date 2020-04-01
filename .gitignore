@@ -1,3 +1,4 @@
 .DS_STORE
 .*.swp
 .ipynb_checkpoints
+code/__pycache__/
