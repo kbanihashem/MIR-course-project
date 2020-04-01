@@ -9,6 +9,8 @@ class RetrievalIndex:
     def __init__(self):
         self.docs = dict()
         self.index = dict()
+        self.vecs = None
+        self.consts = None
 
     def add_doc(self, doc, raise_on_exists=True):
         doc_id = doc.doc_id
@@ -85,8 +87,10 @@ class RetrievalIndex:
             return np.log(self.N/df)
 
         if method == 'p':
-            return max(0, np.log((self.N - df)/df)
+            return max(0, np.log((self.N - df)/df))
 
+    def tf_idf(self, term, doc_id, method='ln'):
+        return self.tf(term, doc_id, method=method[0]) * self.idf(term, method=method[1])
 
     def get_posting_list(self, word, raise_on_not_exists=True):
 
@@ -94,6 +98,20 @@ class RetrievalIndex:
             raise ValueError('term not in index')
 
         return self.index.getdefault(word, {})
+
+    def make_vector_list(self, method='lnn'):
+        for doc_id, doc in self.docs.items():
+            v = dict()
+            for term in doc.distinct_terms:
+                v[term] = self.tf_idf(term, doc_id, method=method[:2]) 
+            if method[2] == 'n':
+                normalization_factor = 1
+            if method[2] == 'c':
+                normalization_factor = np.sqrt(sum(map(lambda x: x**2, v.values())))
+
+            self.vecs[doc_id] = v
+            self.consts[doc_id] = normalization_factor
+            
 
     @classmethod
     def construct_from_wiki(cls, xml):
