@@ -3,6 +3,7 @@ import re
 import numpy as np
 
 from document import Doc
+from helper import Tf_calc
 
 class RetrievalIndex:
 
@@ -11,6 +12,13 @@ class RetrievalIndex:
         self.index = dict()
         self.vecs = None
         self.consts = None
+
+    @classmethod
+    def from_xml(cls, xml, max_num=None, method='file'):
+        index = cls()
+        for doc in Doc.create_list_from_xml(xml, max_num=max_num, method=method):
+            index.add_doc(doc)
+        return index
 
     def add_doc(self, doc, raise_on_exists=True):
         doc_id = doc.doc_id
@@ -25,10 +33,7 @@ class RetrievalIndex:
         for word, position, doc_part in doc.info_iterator:
             self.word_index_add_doc(word, position, doc_id, doc_part)
 
-    def remove_doc(self, doc=None, doc_id=None, raise_on_not_exists=True):
-        doc_id = doc.doc_id if doc is not None else doc_id
-        if doc_id is None:
-            raise ValueError("enter doc or doc_id!")
+    def remove_doc(self, doc_id, raise_on_not_exists=True):
 
         if doc_id not in self.docs:
             if raise_on_not_exists:
@@ -45,34 +50,33 @@ class RetrievalIndex:
         self.index.setdefault(word, {}).setdefault(doc_id, {}).setdefault(doc_part, []).append(position)
 
     #assumes no Attack
-    def word_index_remove_doc(self, word, doc_id):
-        if word not in self.index:
-            return
+    def word_index_remove_doc(self, word, doc_id, raise_on_not_exists=False):
 
-        posting_list = self.index[word]
+        posting_list = self.get_posting_list(word, raise_on_not_exists=raise_on_not_exists)
         if doc_id not in posting_list:
+            if raise_on_not_exists:
+                raise ValueError("Doc %s not in posting list for word %s" % (doc_id, word))
             return
 
         del posting_list[doc_id]
         if not posting_list:
             del self.index[word]
 
-    def tf(self, term, doc_id, method='l'):
-        methods_supported = 'l'
-        if method not in methods_supported:
-            raise ValueError('method shoud be in "%s"', methods_supported)
+    def get_posting_list(self, word, raise_on_not_exists=True):
+
+        if raise_on_not_exists and word not in self.index:
+            raise ValueError('term not in index')
+
+        return self.index.get(word, {})
+
+    def tf(self, term, doc_id, part, method='l'):
+
         posting_list = self.get_posting_list(term)
-
-        if doc_id not in posting_list:
-            tf = 0
-        else:
-            li = posting_list[doc_id]
-            tf = sum(len(li[part]) for part in li)
+        tf = len(posting_list.get(doc_id, {}).get(part, {}))
         
-        if method == 'l':
-            return 1 + np.log(tf) if tf > 0 else 0
+        return Tf_calc.transform_tf(tf, method)
 
-    def idf(self, term, method='n'):
+    def idf(self, term, part, method='n'):
 
         methods_supported = 'ntp'
         if method not in methods_supported:
@@ -82,19 +86,14 @@ class RetrievalIndex:
             return 1
 
         df = len(self.get_posting_list(term))
+        return Tf_calc.idf_transform(df, method=method, N=self.N)
 
-        if method == 't':
-            return np.log(self.N/df)
+    def tf_idf(self, term, doc_id, part, method='ln'):
+        return self.tf(term, doc_id, part, method=method[0]) * self.idf(term, part, method=method[1])
 
-        if method == 'p':
-            return max(0, np.log((self.N - df)/df))
+    def query(self, query_title, query_text, method='ltn-lnn', k=15, flatten=True):
 
-    def tf_idf(self, term, doc_id, method='ln'):
-        return self.tf(term, doc_id, method=method[0]) * self.idf(term, method=method[1])
-
-    def query(self, query, method='ltn-lnn', k=1, flatten=True, query_type='phrase'):
-        if query_type == 'phrase':
-            query = Doc.from_query(query)
+        query = Doc.from_query(query_title, query_text)
 
         self.make_vectors(method[:3])
         v, const = query.tf_idf(method[4:])
@@ -112,43 +111,16 @@ class RetrievalIndex:
         else:
             return top_k
 
-    def get_posting_list(self, word, raise_on_not_exists=True):
-
-        if raise_on_not_exists and word not in self.index:
-            raise ValueError('term not in index')
-
-        return self.index.get(word, {})
-
     def make_vectors(self, method='lnn'):
         self.vecs = {}
         self.consts = {}
         for doc_id, doc in self.docs.items():
             v = dict()
             for term in doc.distinct_terms:
-                #DEBUG
-#                print(term)
-#                if term not in self.index:
-#                    raise ValueError('PROBLEMO')
-                #_DEBUG
                 v[term] = self.tf_idf(term, doc_id, method=method[:2]) 
-            if method[2] == 'n':
-                normalization_factor = 1
-            if method[2] == 'c':
-                normalization_factor = np.sqrt(sum(map(lambda x: x**2, v.values())))
 
             self.vecs[doc_id] = v
-            self.consts[doc_id] = normalization_factor
-
-    @classmethod
-    def from_xml(cls, xml, max_num=None, method='file'):
-        index = cls()
-        for doc in Doc.create_list_from_xml(xml, max_num=max_num, method=method):
-            index.add_doc(doc)
-        return index
-
-    @classmethod
-    def construct_from_wiki(cls, xml):
-        tree = ET.parse(xml)
+            self.consts[doc_id] = Tf_calc.const(v, method[2])
 
     @property
     def N(self):
