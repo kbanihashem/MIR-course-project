@@ -91,18 +91,22 @@ class RetrievalIndex:
     def tf_idf(self, term, doc_id, part, method='ln'):
         return self.tf(term, doc_id, part, method=method[0]) * self.idf(term, part, method=method[1])
 
-    def query(self, query_title, query_text, method='ltn-lnn', k=15, flatten=True):
+    def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=1, flatten=True):
 
         query = Doc.from_query(query_title, query_text)
 
         self.make_vectors(method[:3])
         v, const = query.tf_idf(method[4:])
         scores = []
-        for doc_id, vec in self.vecs.items():
-            score = 0
-            for term, w_q in v.items():
-                score += vec.get(term, 0) * w_q
-            scores.append((doc_id, score / const / self.consts[doc_id]))
+        for doc_id, doc_v in self.vecs.items():
+            part_score = dict()
+            for part, part_vec in doc_v.items():
+                part_score[part] = 0
+                for term, w_q in v[part].items():
+                    part_score[part] += part_vec.get(term, 0) * w_q
+                part_score[part] /= const[part] * self.consts[doc_id][part]
+            final_score = part_score['title'] * title_ratio + part_score['text']
+            scores.append((doc_id, final_score))
 
         scores.sort(key=lambda x: x[1], reverse=True)
         top_k = [scores[i][0] for i in range(min(k, len(scores)))]
@@ -115,12 +119,15 @@ class RetrievalIndex:
         self.vecs = {}
         self.consts = {}
         for doc_id, doc in self.docs.items():
-            v = dict()
-            for term in doc.distinct_terms:
-                v[term] = self.tf_idf(term, doc_id, method=method[:2]) 
-
-            self.vecs[doc_id] = v
-            self.consts[doc_id] = Tf_calc.const(v, method[2])
+            self.vecs[doc_id] = {}
+            self.consts[doc_id] = {}
+            for part in Doc.PARTS:
+                v = dict()
+                for term in doc.distinct_terms(part):
+                    v[term] = self.tf_idf(term, doc_id, part, method=method[:2]) 
+    
+                self.vecs[doc_id][part] = v
+                self.consts[doc_id][part] = Tf_calc.const(v, method[2])
 
     @property
     def N(self):

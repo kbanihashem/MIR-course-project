@@ -51,7 +51,7 @@ class Text_cleaner:
     @staticmethod
     def clean_text(text):
         text = text.lower()
-        text = re.sub(persian_regex, ' ', text)
+        text = re.sub(Text_cleaner.persian_regex, ' ', text)
         text = re.sub('[ ]+', ' ', text)
         normalizer = Normalizer()
         text = normalizer.normalize(text)

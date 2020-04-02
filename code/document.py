@@ -7,6 +7,8 @@ from helper import Tf_calc, Text_cleaner
 
 class Doc:
 
+    PARTS = ('text', 'title')
+
     def __init__(self, doc_id=None, title=None, text=None, original_words=None):
         self.doc_id = doc_id
         self.title = title
@@ -19,8 +21,8 @@ class Doc:
 
         root = Doc.get_root(xml, method)
         doc_id = root[2].text
-        cleaned_title = Doc.get_title(root)
-        cleaned_text = Doc.get_text(root)
+        cleaned_title = Doc.extract_clean_title(root)
+        cleaned_text = Doc.extract_clean_text(root)
         prepared_title = Text_cleaner.prepare_text(cleaned_title)
         prepared_text = Text_cleaner.prepare_text(cleaned_text)
         return cls(doc_id, prepared_title, prepared_text)
@@ -29,8 +31,8 @@ class Doc:
     def from_query(cls, title, text):
         
         doc_id = -1
-        title = Text_cleaner.prepare_text(title)
-        text = Text_cleaner.prepare_text(text)
+        title = Text_cleaner.clean_and_prepare_text(title)
+        text = Text_cleaner.clean_and_prepare_text(text)
         return cls(doc_id, title, text)
 
     @staticmethod
@@ -65,7 +67,7 @@ class Doc:
     @classmethod
     def create_list_from_xml(cls, xml, max_num=None, method='file'):
 
-        root = Doc.getroot(xml, method)
+        root = Doc.get_root(xml, method)
         li = []
         for i, doc_root in enumerate(root):
             if max_num is not None and i >= max_num:
@@ -76,7 +78,7 @@ class Doc:
     @staticmethod
     def get_root(xml, method):
         if method == 'root':
-            return root
+            return xml
         if method == 'file':
             tree = ET.parse(xml)
             return tree.getroot()
@@ -95,7 +97,7 @@ class Doc:
                 yield word
 
         if put_text:
-            for word in text:
+            for word in self.text:
                 yield word
 
     def distinct_terms(self, part='text'):
@@ -110,16 +112,19 @@ class Doc:
         for i, word in enumerate(self.text):
             yield (word, i + 1, 'text')
 
-    def tf_idf(self, part, method):
+    def tf_idf(self, method):
 
         if method[1] != 'n':
             raise ValueError("IDF not supported")
 
         v = dict()
-        for word, count in self.bag_of_words(part).items():
-            v[word] = Tf_calc.transform_tf(count, method[0]) 
-
-        const = Tf_calc.const(v, method[2])
+        const = dict()
+        for part in Doc.PARTS:
+            v[part] = dict()
+            for word, count in self.bag_of_words(part).items():
+                v[part][word] = Tf_calc.transform_tf(count, method[0]) 
+    
+            const[part] = Tf_calc.const(v, method[2])
         return v, const
 
     def __repr__(self):

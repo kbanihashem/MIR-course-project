@@ -5,9 +5,15 @@ XML_PATH = '../data/Persian.xml'
 def main():
     test5()
 
+def test6():
+    document = Doc.create_from_xml('test_doc.xml')
+    print(document)
+
 def test5():
     index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
-    q = index.query('مسابقات فوتبال المپیک', query_type='phrase', k=10)
+    query_title = 'مسابقات فوتبال المپیک'
+    query_text = query_title
+    q = index.query(query_title, query_text, k=10)
     print(q)
     
 def test4():
