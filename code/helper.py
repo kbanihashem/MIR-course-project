@@ -72,3 +72,48 @@ class Text_cleaner:
         stemmed_list = list(filter(lambda x: x != '', map(stemmer.stem, punc_free)))
         
         return stemmed_list
+
+class Eval_calc:
+
+    @staticmethod 
+    def MAP(truth, out):
+        truth = set(truth)
+        total_precisions = 0
+        releavent = 0
+        for i, doc in enumerate(out):
+            if doc in truth:
+                releavent += 1
+                total_precisions += releavent / (i + 1) 
+        return total_precisions / len(truth)
+
+    @staticmethod 
+    def F(truth, out):
+        truth = set(truth)
+        out = set(out)
+        
+        tp = len(set.intersection(truth, out))
+        precision = tp / len(out)
+        recall = tp / len(truth)
+        return 2 * precision * recall / (precision + recall)
+
+    @staticmethod 
+    def R_precision(truth, out):
+        rel = len(truth)
+        out = out[:rel]
+        tp = len(set(out).intersection(truth))
+        return tp / rel
+
+    @staticmethod
+    def NDCG(truth, out):
+
+        truth = set(truth)
+        k = len(out)
+        dcg = 0
+        max_dcg = 0
+        for i in range(k):
+            factor = 1 if i == 0 else np.log2(i + 1)
+            if out[i] in truth:
+                dcg += 1 / factor
+            if i < len(truth):
+                max_dcg += 1 / factor
+        return dcg / max_dcg
