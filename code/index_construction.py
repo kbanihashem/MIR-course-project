@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import re
 import numpy as np
+import pickle
 
 from document import Doc
 from helper import Tf_calc
@@ -12,6 +13,22 @@ class RetrievalIndex:
         self.index = dict()
         self.vecs = None
         self.consts = None
+
+    def save(self, file_path):
+        with open(file_path, 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(cls, file_path):
+        with open(file_path, 'rb') as f:
+            index = pickle.load(f)
+        return index
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__ = d
 
     @classmethod
     def from_xml(cls, xml, max_num=None, method='file'):

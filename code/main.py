@@ -2,8 +2,21 @@ from document import Doc
 from index_construction import RetrievalIndex
 
 XML_PATH = '../data/Persian.xml'
+INDEX_PATH = 'IR_INDEX.dat'
+
 def main():
-    test5()
+    test8()
+
+def test8():
+    index = RetrievalIndex.load(INDEX_PATH)
+    query_title = 'مسابقات فوتبال المپیک'
+    query_text = query_title
+    q = index.query(query_title, query_text, k=10)
+    print(q)
+
+def test7():
+    index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
+    index.save(INDEX_PATH)
 
 def test6():
     document = Doc.create_from_xml('test_doc.xml')

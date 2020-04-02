@@ -16,6 +16,12 @@ class Doc:
         self.original_words = original_words
         self._bag_of_words = {'text':None, 'title':None, 'all':None}
 
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__ = d
+
     @classmethod
     def create_from_xml(cls, xml, method='file'):
 
