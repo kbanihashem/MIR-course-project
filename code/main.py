@@ -9,6 +9,8 @@ def main():
 
 def test8():
     index = RetrievalIndex.load(INDEX_PATH)
+    index.make_vectors('lnn')
+    return
     query_title = 'مسابقات فوتبال المپیک'
     query_text = query_title
     q = index.query(query_title, query_text, k=10)
