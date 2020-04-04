@@ -33,7 +33,7 @@ class IREvaluator:
                 if len(lines) < 1:
                     raise ValueError('file has no lines')
                 query_title = lines[0]
-                if len(lines) > 1:
+                if len(lines) > 1 and len(lines[1].replace(' ', '')) > 0:
                     query_text = lines[1]
                 else:
                     query_text = query_title
@@ -47,6 +47,10 @@ class IREvaluator:
 
             scores.append(IREvaluator.funcs[metric](real_best, top_k))
             if verbose:
+                print(top_k)
+                print(query_text)
+                print(query_title)
+                print(real_best)
                 print("i = %d, q = %s" % (i, q))
 #                print("query = %s" % query_title)
                 print("metric = %s, Element %.2f, runing mean = %.2f" % (metric, scores[-1], mean(scores)))

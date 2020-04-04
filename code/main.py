@@ -9,6 +9,11 @@ def main():
 #    test7()
     test10()
 
+def test13():
+    index = RetrievalIndex.from_xml(XML_PATH, max_num=10)
+    index.make_vectors()
+    print(index.vecs)
+
 def test12():
     index = RetrievalIndex.load(INDEX_PATH)
     query_title = 'زندگی حیوانات وحشی'
@@ -26,7 +31,7 @@ def test10():
     index = RetrievalIndex.load(INDEX_PATH)
     system_evaluator = IREvaluator(index)
     for metric in IREvaluator.funcs:
-        print(metric, system_evaluator.evaluate('all', metric, method='ltc-lnc', verbose=True))
+        print(metric, system_evaluator.evaluate('all', metric, method='ltn-lnn', verbose=True))
 
 
 def test9():

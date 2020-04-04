@@ -47,7 +47,7 @@ class Text_cleaner:
     def clean_and_prepare_text(text):
         cleaned = Text_cleaner.clean_text(text)
         prepared = Text_cleaner.prepare_text(cleaned)
-        return cleaned
+        return prepared
 
     @staticmethod
     def clean_text(text):
