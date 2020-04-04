@@ -95,6 +95,9 @@ class Eval_calc:
         tp = len(set.intersection(truth, out))
         precision = tp / len(out)
         recall = tp / len(truth)
+        if precision + recall == 0:
+            return 0
+
         return 2 * precision * recall / (precision + recall)
 
     @staticmethod 
@@ -118,3 +121,8 @@ class Eval_calc:
             if i < len(truth):
                 max_dcg += 1 / factor
         return dcg / max_dcg
+
+def mean(li):
+    if len(li) == 0:
+        raise ValueError("li shouldn't be empty")
+    return sum(li)/len(li)

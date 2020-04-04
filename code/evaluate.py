@@ -1,5 +1,5 @@
 import glob
-from helper import Eval_calc
+from helper import Eval_calc, mean
 from index_construction import RetrievalIndex
 class IREvaluator:
 
@@ -23,9 +23,9 @@ class IREvaluator:
         return [self.queries_path + ("relevance/%s.txt" % i) for i in (range(1, self.query_nums) if num == 'all' else [num])]
 
     def q_and_res_path(self, num='all'):
-        return zip(self.queries_path(num), self.result_path(num))
+        return zip(self.query_path(num), self.result_path(num))
 
-    def evaluate(self, query_id='all', metric='F', method='ltn-lnn'):
+    def evaluate(self, query_id='all', metric='F', method='ltn-lnn', verbose=False):
         scores = []
         for q, res in self.q_and_res_path(query_id):
             with open(q, 'r') as f:
@@ -38,9 +38,19 @@ class IREvaluator:
                 else:
                     query_text = query_title
                 top_k = self.retrieval_index.query(query_title, query_text, method)
+
+            if verbose:
+                print(f"top_k = {top_k}")
+                
             with open(res, 'r') as f:
-                real_best = f.read().line().split()
+                real_best = f.read().replace(',', '').split()
+
+            if verbose:
+                print(f"truth = {real_best}")
+
             scores.append(IREvaluator.funcs[metric](real_best, top_k))
+            if verbose:
+                print("metric = %s, Element %.2f, runing mean = %.2f" % (metric, scores[-1], mean(scores)))
         
         assert len(scores) > 0
         return sum(scores)/ len(scores)
