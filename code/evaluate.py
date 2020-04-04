@@ -8,6 +8,7 @@ class IREvaluator:
             'R': Eval_calc.R_precision,
             'NDCG': Eval_calc.NDCG,
             }
+
     def __init__(self, retrieval_index=None,
             queries_path='../data/',
             query_nums=20):

@@ -130,7 +130,7 @@ class Doc:
             for word, count in self.bag_of_words(part).items():
                 v[part][word] = Tf_calc.transform_tf(count, method[0]) 
     
-            const[part] = Tf_calc.const(v, method[2])
+            const[part] = Tf_calc.const(v[part], method[2])
         return v, const
 
     def __repr__(self):

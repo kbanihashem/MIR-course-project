@@ -2,6 +2,7 @@ from hazm import Normalizer, word_tokenize, Stemmer
 import re
 import numpy as np
 
+EPSILON = 1e-7
 class Tf_calc:
     def transform_tf(tf, method='l'):
     

@@ -4,7 +4,7 @@ import numpy as np
 import pickle
 
 from document import Doc
-from helper import Tf_calc
+from helper import Tf_calc, EPSILON
 
 class RetrievalIndex:
 
@@ -121,7 +121,7 @@ class RetrievalIndex:
                 part_score[part] = 0
                 for term, w_q in v[part].items():
                     part_score[part] += part_vec.get(term, 0) * w_q
-                part_score[part] /= const[part] * self.consts[doc_id][part]
+                part_score[part] /= (const[part] * self.consts[doc_id][part] + EPSILON)
             final_score = part_score['title'] * title_ratio + part_score['text']
             scores.append((doc_id, final_score))
 

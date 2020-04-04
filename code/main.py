@@ -5,12 +5,17 @@ XML_PATH = '../data/Persian.xml'
 INDEX_PATH = 'IR_INDEX.dat'
 
 def main():
-    test8()
+    test9()
+
+def test9():
+    index = RetrievalIndex.load(INDEX_PATH)
+    query_title = 'مسابقات فوتبال المپیک'
+    query_text = query_title
+    q = index.query(query_title, query_text, k=10, method='ltc-lnc')
+    print(q)
 
 def test8():
     index = RetrievalIndex.load(INDEX_PATH)
-    index.make_vectors('lnn')
-    return
     query_title = 'مسابقات فوتبال المپیک'
     query_text = query_title
     q = index.query(query_title, query_text, k=10)
