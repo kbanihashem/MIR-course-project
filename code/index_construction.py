@@ -13,9 +13,9 @@ class RetrievalIndex:
         self.index = dict()
         self.vecs = None
         self.consts = None
-        self.modified = {'lnn':True, 'lnc': True}
-        self.cached_vectors = {'lnn': None, 'lnc': None}
-        self.cached_consts = {'lnn': None, 'lnc': None}
+        self.modified = {'ltn':True, 'ltc': True}
+        self.cached_vectors = {'ltn': None, 'ltc': None}
+        self.cached_consts = {'ltn': None, 'ltc': None}
 
     def save(self, file_path):
         with open(file_path, 'wb') as f:
@@ -124,7 +124,9 @@ class RetrievalIndex:
         else:
             raise ValueError("method must be standard")
 
-        return filter(is_fine, self.docs.keys())
+        print(li_title, li_text)
+        ans = list(filter(is_fine, self.docs.keys()))
+        return ans
 
     def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=2, flatten=True, exact_method="standard"):
 
@@ -157,7 +159,7 @@ class RetrievalIndex:
         else:
             return top_k
 
-    def make_vectors(self, method='lnn'):
+    def make_vectors(self, method='ltn'):
 
         if not self.modified[method]:
             self.vecs = self.cached_vectors[method]

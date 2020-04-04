@@ -1,5 +1,5 @@
 import glob
-from helper import Eval_calc, mean
+from helper import Eval_calc, mean, Text_cleaner
 from index_construction import RetrievalIndex
 class IREvaluator:
 
@@ -37,7 +37,13 @@ class IREvaluator:
                     query_text = lines[1]
                 else:
                     query_text = query_title
+#                if verbose:
+#                    print("Query title: %s, query text: %s" % (query_title, query_text))
+#                    print('\n'.join(map(str, Text_cleaner.query_cleaner(query_title))))
                 top_k = self.retrieval_index.query(query_title, query_text, method)
+
+            if verbose:
+                print(top_k)
 
             with open(res, 'r') as f:
                 real_best = f.read().replace(',', '').split()

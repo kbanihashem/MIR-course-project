@@ -9,6 +9,11 @@ def main():
 #    test7()
     test10()
 
+def test11():
+    index = RetrievalIndex.load(INDEX_PATH)
+    term = ['باشگاه فوتبال']
+    print(index.get_exact_docs(term, term))
+
 def test10():
     index = RetrievalIndex.load(INDEX_PATH)
     system_evaluator = IREvaluator(index)
