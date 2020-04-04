@@ -74,6 +74,15 @@ class Text_cleaner:
         
         return stemmed_list
 
+    @staticmethod
+    def query_cleaner(query):
+        query = query.replace("'", '"')
+        li = query.split('"')
+        real_query = ''.join(li[i] for i in range(len(li)) if i % 2 == 0)
+        real_query = re.sub('[ ]+', ' ', real_query)
+        exact = [li[i] for i in range(len(li)) if i % 2 == 1]
+        return real_query, exact
+
 class Eval_calc:
 
     @staticmethod 

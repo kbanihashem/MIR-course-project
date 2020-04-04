@@ -114,14 +114,25 @@ class RetrievalIndex:
     def tf_idf(self, term, doc_id, part, method='ln'):
         return self.tf(term, doc_id, part, method=method[0]) * self.idf(term, part, method=method[1])
 
+    def get_exact_docs(self, li):
+
+        def is_fine(doc_id):
+            return all(self.docs[doc_id].contains(phrase) for phrase in li)
+
+        return filter(is_fine, self.docs.keys())
+
     def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=2, flatten=True):
 
         query = Doc.from_query(query_title, query_text)
+        query, li = Text_cleaner.query_cleaner(query, li)
+        good_dod_ids = self.get_exact_docs(li)
 
         self.make_vectors(method[:3])
         v, const = query.tf_idf(method[4:])
         scores = []
         for doc_id, doc_v in self.vecs.items():
+            if doc_id not in li:
+                continue
             part_score = dict()
             for part, part_vec in doc_v.items():
                 part_score[part] = 0

@@ -27,7 +27,7 @@ class IREvaluator:
 
     def evaluate(self, query_id='all', metric='F', method='ltn-lnn', verbose=False):
         scores = []
-        for q, res in self.q_and_res_path(query_id):
+        for i, (q, res) in enumerate(self.q_and_res_path(query_id)):
             with open(q, 'r') as f:
                 lines = f.read().split('\n')
                 if len(lines) < 1:
@@ -39,18 +39,15 @@ class IREvaluator:
                     query_text = query_title
                 top_k = self.retrieval_index.query(query_title, query_text, method)
 
-            if verbose:
-                print(f"top_k = {top_k}")
-                
             with open(res, 'r') as f:
                 real_best = f.read().replace(',', '').split()
 
-            if verbose:
-                print(f"truth = {real_best}")
-
             scores.append(IREvaluator.funcs[metric](real_best, top_k))
             if verbose:
+                print("i = %d, q = %s" % (i, q))
+                print("query = %s" % query_title)
                 print("metric = %s, Element %.2f, runing mean = %.2f" % (metric, scores[-1], mean(scores)))
+                print()
         
         assert len(scores) > 0
         return sum(scores)/ len(scores)
