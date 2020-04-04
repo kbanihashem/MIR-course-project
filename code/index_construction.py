@@ -108,7 +108,7 @@ class RetrievalIndex:
     def tf_idf(self, term, doc_id, part, method='ln'):
         return self.tf(term, doc_id, part, method=method[0]) * self.idf(term, part, method=method[1])
 
-    def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=1, flatten=True):
+    def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=2, flatten=True):
 
         query = Doc.from_query(query_title, query_text)
 

@@ -1,5 +1,6 @@
 import glob
 from helper import Eval_calc
+from index_construction import RetrievalIndex
 class IREvaluator:
 
     funcs = {'F': Eval_calc.F,
@@ -23,7 +24,8 @@ class IREvaluator:
     def q_and_res_path(self, num='all'):
         return zip(self.queries_path(num), self.result_path(num))
 
-    def evaluate(self, query_id='all', metric='F'):
+    def evaluate(self, query_id='all', metric='F', method='ltn-lnn'):
+        scores = []
         for q, res in self.q_and_res_path(query_id):
             with open(q, 'r') as f:
                 lines = f.read().split('\n')
@@ -34,3 +36,10 @@ class IREvaluator:
                     query_text = lines[1]
                 else:
                     query_text = query_title
+                top_k = self.retrieval_index.query(query_title, query_text, method)
+            with open(res, 'r') as f:
+                real_best = f.read().line().split()
+            scores.append(IREvaluator.funcs[metric](real_best, top_k))
+        
+        assert len(scores) > 0
+        return sum(scores)/ len(scores)
