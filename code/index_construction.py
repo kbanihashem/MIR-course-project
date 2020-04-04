@@ -13,6 +13,9 @@ class RetrievalIndex:
         self.index = dict()
         self.vecs = None
         self.consts = None
+        self.modified = True
+        self.cached_vectors = {'lnn': None, 'lnc': None}
+        self.cached_consts = {'lnn': None, 'lnc': None}
 
     def save(self, file_path):
         with open(file_path, 'wb') as f:
@@ -38,6 +41,8 @@ class RetrievalIndex:
         return index
 
     def add_doc(self, doc, raise_on_exists=True):
+
+        self.modified = True
         doc_id = doc.doc_id
 
         if doc_id in self.docs:
@@ -52,6 +57,7 @@ class RetrievalIndex:
 
     def remove_doc(self, doc_id, raise_on_not_exists=True):
 
+        self.modified = True
         if doc_id not in self.docs:
             if raise_on_not_exists:
                 raise ValueError("doc_id not found")
@@ -133,6 +139,12 @@ class RetrievalIndex:
             return top_k
 
     def make_vectors(self, method='lnn'):
+
+        if not modified:
+            self.vecs = self.cached_vectors[method]
+            self.consts = self.cached_consts[method]
+            return
+
         self.vecs = {}
         self.consts = {}
         for doc_id, doc in self.docs.items():
@@ -145,6 +157,10 @@ class RetrievalIndex:
     
                 self.vecs[doc_id][part] = v
                 self.consts[doc_id][part] = Tf_calc.const(v, method[2])
+
+        self.cached_vectors[method] = self.vecs
+        self.cached_consts[method] = self.consts
+        self.modified = False
 
     @property
     def N(self):
