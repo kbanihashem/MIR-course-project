@@ -147,12 +147,12 @@ class RetrievalIndex:
                 part_score[part] = 0
                 for term, w_q in v[part].items():
                     part_score[part] += part_vec.get(term, 0) * w_q
-                normalization_factor = self.consts[doc_id][part] * const[part]
-                if normalization_factor < 1e-6:
-                    part_score[part] = 0
-                else:
-                    part_score[part] /= normalization_factor
-#                part_score[part] /= (const[part] * self.consts[doc_id][part] + EPSILON)
+                normalization_factor = self.consts[doc_id][part] * const[part] + EPSILON
+#                if normalization_factor < 1e-6:
+#                    part_score[part] = 0
+#                else:
+#                    part_score[part] /= normalization_factor
+                part_score[part] /= normalization_factor
             final_score = part_score['title'] * title_ratio + part_score['text']
             scores.append((doc_id, final_score))
 
