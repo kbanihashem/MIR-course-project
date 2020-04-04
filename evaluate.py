@@ -10,7 +10,7 @@ class IREvaluator:
             }
 
     def __init__(self, retrieval_index=None,
-            queries_path='../data/',
+            queries_path='./data/',
             query_nums=20):
         self.retrieval_index = retrieval_index
         self.queries_path = queries_path
