@@ -124,7 +124,6 @@ class RetrievalIndex:
         else:
             raise ValueError("method must be standard")
 
-        print(li_title, li_text)
         ans = list(filter(is_fine, self.docs.keys()))
         return ans
 

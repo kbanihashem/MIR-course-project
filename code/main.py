@@ -9,6 +9,14 @@ def main():
 #    test7()
     test10()
 
+def test12():
+    index = RetrievalIndex.load(INDEX_PATH)
+    query_title = 'زندگی حیوانات وحشی'
+    query_text = query_title
+    q = index.query(query_title, query_text, k=10, method='ltn-lnn')
+    print(q)
+
+
 def test11():
     index = RetrievalIndex.load(INDEX_PATH)
     term = ['باشگاه فوتبال']
@@ -18,7 +26,7 @@ def test10():
     index = RetrievalIndex.load(INDEX_PATH)
     system_evaluator = IREvaluator(index)
     for metric in IREvaluator.funcs:
-        print(metric, system_evaluator.evaluate('all', metric, method='ltn-lnn', verbose=True))
+        print(metric, system_evaluator.evaluate('all', metric, method='ltc-lnc', verbose=True))
 
 
 def test9():

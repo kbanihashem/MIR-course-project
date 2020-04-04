@@ -42,16 +42,13 @@ class IREvaluator:
 #                    print('\n'.join(map(str, Text_cleaner.query_cleaner(query_title))))
                 top_k = self.retrieval_index.query(query_title, query_text, method)
 
-            if verbose:
-                print(top_k)
-
             with open(res, 'r') as f:
                 real_best = f.read().replace(',', '').split()
 
             scores.append(IREvaluator.funcs[metric](real_best, top_k))
             if verbose:
                 print("i = %d, q = %s" % (i, q))
-                print("query = %s" % query_title)
+#                print("query = %s" % query_title)
                 print("metric = %s, Element %.2f, runing mean = %.2f" % (metric, scores[-1], mean(scores)))
                 print()
         
