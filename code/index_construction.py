@@ -4,7 +4,7 @@ import numpy as np
 import pickle
 
 from document import Doc
-from helper import Tf_calc, EPSILON
+from helper import Tf_calc, EPSILON, Text_cleaner
 
 class RetrievalIndex:
 
@@ -13,7 +13,7 @@ class RetrievalIndex:
         self.index = dict()
         self.vecs = None
         self.consts = None
-        self.modified = True
+        self.modified = {'lnn':True, 'lnc': True}
         self.cached_vectors = {'lnn': None, 'lnc': None}
         self.cached_consts = {'lnn': None, 'lnc': None}
 
@@ -42,7 +42,7 @@ class RetrievalIndex:
 
     def add_doc(self, doc, raise_on_exists=True):
 
-        self.modified = True
+        self.set_modified(True)
         doc_id = doc.doc_id
 
         if doc_id in self.docs:
@@ -57,6 +57,7 @@ class RetrievalIndex:
 
     def remove_doc(self, doc_id, raise_on_not_exists=True):
 
+        self.set_modified(True)
         self.modified = True
         if doc_id not in self.docs:
             if raise_on_not_exists:
@@ -114,24 +115,31 @@ class RetrievalIndex:
     def tf_idf(self, term, doc_id, part, method='ln'):
         return self.tf(term, doc_id, part, method=method[0]) * self.idf(term, part, method=method[1])
 
-    def get_exact_docs(self, li):
+    def get_exact_docs(self, li_title, li_text, method="standard"):
 
-        def is_fine(doc_id):
-            return all(self.docs[doc_id].contains(phrase) for phrase in li)
+        if method == "standard":
+            li = li_text
+            def is_fine(doc_id):
+                return all(self.docs[doc_id].has_exact(phrase) for phrase in li)
+        else:
+            raise ValueError("method must be standard")
 
         return filter(is_fine, self.docs.keys())
 
-    def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=2, flatten=True):
+    def query(self, query_title, query_text, method='ltn-lnn', k=15, title_ratio=2, flatten=True, exact_method="standard"):
+
+        query_title, li_title = Text_cleaner.query_cleaner(query_title)
+        query_text, li_text = Text_cleaner.query_cleaner(query_text)
 
         query = Doc.from_query(query_title, query_text)
-        query, li = Text_cleaner.query_cleaner(query, li)
-        good_dod_ids = self.get_exact_docs(li)
+
+        good_doc_ids = self.get_exact_docs(li_title, li_text, exact_method)
 
         self.make_vectors(method[:3])
         v, const = query.tf_idf(method[4:])
         scores = []
         for doc_id, doc_v in self.vecs.items():
-            if doc_id not in li:
+            if doc_id not in good_doc_ids:
                 continue
             part_score = dict()
             for part, part_vec in doc_v.items():
@@ -151,7 +159,7 @@ class RetrievalIndex:
 
     def make_vectors(self, method='lnn'):
 
-        if not modified:
+        if not self.modified[method]:
             self.vecs = self.cached_vectors[method]
             self.consts = self.cached_consts[method]
             return
@@ -171,7 +179,11 @@ class RetrievalIndex:
 
         self.cached_vectors[method] = self.vecs
         self.cached_consts[method] = self.consts
-        self.modified = False
+        self.modified[method] = False
+
+    def set_modified(self, value):
+        for method in self.modified:
+            self.modified[method] = value
 
     @property
     def N(self):

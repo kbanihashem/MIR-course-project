@@ -31,7 +31,9 @@ class Doc:
         cleaned_text = Doc.extract_clean_text(root)
         prepared_title = Text_cleaner.prepare_text(cleaned_title)
         prepared_text = Text_cleaner.prepare_text(cleaned_text)
-        return cls(doc_id, prepared_title, prepared_text)
+
+        original_words = Doc.extract_ugly_title(root) + " " + Doc.extract_ugly_text(root)
+        return cls(doc_id, prepared_title, prepared_text, original_words)
 
     @classmethod
     def from_query(cls, title, text):
@@ -49,15 +51,19 @@ class Doc:
         return -1
 
     @staticmethod
-    def extract_clean_title(root):
+    def extract_ugly_title(root):
         i = Doc.get_field_number(root, 'title')
         if i == -1:
             print(1)
             return ''
-        return Text_cleaner.clean_text(root[i].text)
+        return root[i].text
 
     @staticmethod
-    def extract_clean_text(root):
+    def extract_clean_title(root):
+        return Text_cleaner.clean_text(Doc.extract_ugly_title(root))
+
+    @staticmethod
+    def extract_ugly_text(root):
         i = Doc.get_field_number(root, 'revision')
         if i == -1:
             print(2)
@@ -68,7 +74,11 @@ class Doc:
         if i == -1:
             print(3)
             return ''
-        return Text_cleaner.clean_text(root[i].text)
+        return root[i].text
+
+    @staticmethod
+    def extract_clean_text(root):
+        return Text_cleaner.clean_text(Doc.extract_ugly_text(root))
 
     @classmethod
     def create_list_from_xml(cls, xml, max_num=None, method='file'):
@@ -142,4 +152,7 @@ class Doc:
         ans += "Title: %s\n\n" % ' '.join(self.title)
         ans += ' '.join(self.text)
         return ans
+
+    def has_exact(self, query):
+        return query in self.original_words
     

@@ -6,6 +6,7 @@ XML_PATH = '../data/Persian.xml'
 INDEX_PATH = 'IR_INDEX.dat'
 
 def main():
+#    test7()
     test10()
 
 def test10():
@@ -29,6 +30,7 @@ def test8():
     q = index.query(query_title, query_text, k=10)
     print(q)
 
+#IMPORTANT
 def test7():
     index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
     index.save(INDEX_PATH)
