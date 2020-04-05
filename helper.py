@@ -42,8 +42,12 @@ class Tf_calc:
 class Text_cleaner:
 
     persian_regex = "[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی abcdefghijklmnopqrstuvwxyz]+" 
-    punct_list = ";.,`-=[]\\\'_+()*&^%$#!~|}{\":?><.،-:؛÷ًًٌٍَُِّ'؟"
-    punc_regex = "[%s]+" % Text_cleaner.punct_list
+    punct_list = "/;.,-=\[\]_+()*&^%$#!~|}{:?><.،-:؛÷ًًٌٍَُِّ'؟\"\'\\"
+
+    def fix_word(w):
+        for c in Text_cleaner.punct_list:
+            w = w.replace(c, '')
+        return "$" if w == "" else w
 
     @staticmethod
     def prepare_text(text):    
@@ -52,10 +56,11 @@ class Text_cleaner:
         tokenized = word_tokenize(text)
         #نگارشی
         def fix_word(w):
-            w = re.sub(Text_cleaner.punct_regex, '', text)
+            for c in Text_cleaner.punct_list:
+                w = w.replace(c, '')
             return "$" if w == "" else w
-        
-        punc_free = filter(lambda x: x != '$', map(fix_word, tokenized))
+
+        punc_free = list(filter(lambda x: x != '$', map(fix_word, tokenized)))
         stemmer = Stemmer()
         stemmed_list = list(filter(lambda x: x != '', map(stemmer.stem, punc_free)))
         
