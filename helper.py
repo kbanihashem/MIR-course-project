@@ -42,30 +42,17 @@ class Tf_calc:
 class Text_cleaner:
 
     persian_regex = "[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی abcdefghijklmnopqrstuvwxyz]+" 
+    punct_list = ";.,`-=[]\\\'_+()*&^%$#!~|}{\":?><.،-:؛÷ًًٌٍَُِّ'؟"
+    punc_regex = "[%s]+" % Text_cleaner.punct_list
 
     @staticmethod
-    def clean_and_prepare_text(text):
-        cleaned = Text_cleaner.clean_text(text)
-        prepared = Text_cleaner.prepare_text(cleaned)
-        return prepared
-
-    @staticmethod
-    def clean_text(text):
-        text = text.lower()
-        text = re.sub(Text_cleaner.persian_regex, ' ', text)
-        text = re.sub('[ ]+', ' ', text)
+    def prepare_text(text):    
         normalizer = Normalizer()
         text = normalizer.normalize(text)
         tokenized = word_tokenize(text)
-        return tokenized
-    
-    @staticmethod
-    def prepare_text(tokenized):    
         #نگارشی
-        punc_list = '.،؟!؛'
         def fix_word(w):
-            for c in punc_list:
-                w = w.replace(c, '')
+            w = re.sub(Text_cleaner.punct_regex, '', text)
             return "$" if w == "" else w
         
         punc_free = filter(lambda x: x != '$', map(fix_word, tokenized))

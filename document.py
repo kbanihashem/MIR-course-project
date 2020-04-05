@@ -27,20 +27,20 @@ class Doc:
 
         root = Doc.get_root(xml, method)
         doc_id = root[2].text
-        cleaned_title = Doc.extract_clean_title(root)
-        cleaned_text = Doc.extract_clean_text(root)
-        prepared_title = Text_cleaner.prepare_text(cleaned_title)
-        prepared_text = Text_cleaner.prepare_text(cleaned_text)
+        title = Doc.extract_title(root)
+        text = Doc.extract_text(root)
+        prepared_title = Text_cleaner.prepare_text(title)
+        prepared_text = Text_cleaner.prepare_text(text)
 
-        original_words = Doc.extract_ugly_title(root) + " " + Doc.extract_ugly_text(root)
+        original_words = title + " " + text 
         return cls(doc_id, prepared_title, prepared_text, original_words)
 
     @classmethod
     def from_query(cls, title, text):
         
         doc_id = -1
-        title = Text_cleaner.clean_and_prepare_text(title)
-        text = Text_cleaner.clean_and_prepare_text(text)
+        title = Text_cleaner.prepare_text(title)
+        text = Text_cleaner.prepare_text(text)
         return cls(doc_id, title, text)
 
     @staticmethod
@@ -51,7 +51,7 @@ class Doc:
         return -1
 
     @staticmethod
-    def extract_ugly_title(root):
+    def extract_title(root):
         i = Doc.get_field_number(root, 'title')
         if i == -1:
             print(1)
@@ -59,11 +59,7 @@ class Doc:
         return root[i].text
 
     @staticmethod
-    def extract_clean_title(root):
-        return Text_cleaner.clean_text(Doc.extract_ugly_title(root))
-
-    @staticmethod
-    def extract_ugly_text(root):
+    def extract_text(root):
         i = Doc.get_field_number(root, 'revision')
         if i == -1:
             print(2)
@@ -75,10 +71,6 @@ class Doc:
             print(3)
             return ''
         return root[i].text
-
-    @staticmethod
-    def extract_clean_text(root):
-        return Text_cleaner.clean_text(Doc.extract_ugly_text(root))
 
     @classmethod
     def create_list_from_xml(cls, xml, max_num=None, method='file'):
