@@ -1,3 +1,4 @@
+import numpy as np
 class Bigram:
 
     def __init__(self):
@@ -29,7 +30,24 @@ class Bigram:
 
     @staticmethod
     def edit_distance(word1, word2):
-        pass
+        l1 = len(word1)
+        l2 = len(word2)
+        m = np.zeros((l1, l2), dtype=np.long)
+        for i in range(l1):
+            m[i][0] = i + 1
+        for j in range(l2):
+            m[0][j] = j + 1
+
+        for i in range(l1):
+            for j in range(l2):
+                m[i][j] = min(
+                        m[i - 1, j] + 1,
+                        m[i, j - 1] + 1,
+                        m[i - 1, j - 1] + (0 if word1[i] == word2[j] else 1),
+                        )
+        return m[l1 - 1, l2 - 1]
+
+
 
     def extract_top_bigram(self, word):
         pass
