@@ -6,8 +6,8 @@ XML_PATH = './data/Persian.xml'
 INDEX_PATH = 'IR_INDEX.dat'
 
 def main():
-#    test7()
-    test10()
+    test7()
+#    test10()
 
 def test13():
     index = RetrievalIndex.from_xml(XML_PATH, max_num=10)
@@ -51,6 +51,7 @@ def test8():
 #IMPORTANT
 def test7():
     index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
+    index.make_vectors()
     index.save(INDEX_PATH)
 
 def test6():

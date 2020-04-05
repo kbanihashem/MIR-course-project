@@ -120,19 +120,17 @@ class Doc:
         for i, word in enumerate(self.text):
             yield (word, i + 1, 'text')
 
-    def tf_idf(self, method):
-
-        if method[1] != 'n':
-            raise ValueError("IDF not supported")
+    def tf_idf(self):
 
         v = dict()
         const = dict()
         for part in Doc.PARTS:
             v[part] = dict()
             for word, count in self.bag_of_words(part).items():
-                v[part][word] = Tf_calc.transform_tf(count, method[0]) 
+                v[part][word] = Tf_calc.transform_tf(count) 
     
-            const[part] = Tf_calc.const(v[part], method[2])
+            const[part] = Tf_calc.const(v[part])
+
         return v, const
 
     def __repr__(self):

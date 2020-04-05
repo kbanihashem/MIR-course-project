@@ -4,39 +4,14 @@ import numpy as np
 
 EPSILON = 1e-7
 class Tf_calc:
-    def transform_tf(tf, method='l'):
-    
-        methods_supported = "l"
-        if method not in methods_supported:
-            raise ValueError("method should be in '%s'" % methods_supported)
-    
-        if method == 'l':
-            return 1 + np.log(tf) if tf > 0 else 0
+    def transform_tf(tf):
+        return 1 + np.log(tf) if tf > 0 else 0
 
-    def const(v, method='n'):
-        methods_supported = "nc"
-        if method not in methods_supported:
-            raise ValueError("method should be in '%s'" % methods_supported)
+    def const(v):
+        return np.sqrt(sum(map(lambda x: x**2, v.values())))
 
-        if method == 'n':
-            return 1
-
-        if method == 'c':
-            return np.sqrt(sum(map(lambda x: x**2, v.values())))
-
-    def idf_transform(df, method='n', N=1):
-        methods_supported = "ntp"
-        if method not in methods_supported:
-            raise ValueError("method should be in '%s'" % methods_supported)
-
-        if method == 'n':
-            return 1
-
-        if method == 't':
-            return np.log(N/df)
-
-        if method == 'p':
-            return max(0, np.log((N - df)/df))
+    def idf_transform(df, N):
+        return np.log(N/df)
         
 
 class Text_cleaner:

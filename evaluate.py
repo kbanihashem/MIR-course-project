@@ -26,6 +26,7 @@ class IREvaluator:
         return zip(self.query_path(num), self.result_path(num))
 
     def evaluate(self, query_id='all', metric='F', method='ltn-lnn', verbose=False):
+        should_divide = (method[2] == 'c')
         scores = []
         for i, (q, res) in enumerate(self.q_and_res_path(query_id)):
             with open(q, 'r') as f:
@@ -40,7 +41,7 @@ class IREvaluator:
 #                if verbose:
 #                    print("Query title: %s, query text: %s" % (query_title, query_text))
 #                    print('\n'.join(map(str, Text_cleaner.query_cleaner(query_title))))
-                top_k = self.retrieval_index.query(query_title, query_text, method)
+                top_k = self.retrieval_index.query(query_title, query_text, should_divide)
 
             with open(res, 'r') as f:
                 real_best = f.read().replace(',', '').split()
