@@ -3,7 +3,7 @@ class Bigram:
 
     def __init__(self):
         #bigram -> {word1, word2, ... wordn}
-        self.bigram_index = {}
+        self.bigram_index = dict()
         self.word_set = set()
 
     def add_word(self, word):
@@ -58,3 +58,9 @@ class Bigram:
 
         candidates = self.extract_top_bigram(word)
         return max(candidates, key = lambda w: edit_distance(word, w), reverse=True)
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__ = d

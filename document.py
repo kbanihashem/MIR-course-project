@@ -9,11 +9,12 @@ class Doc:
 
     PARTS = ('text', 'title')
 
-    def __init__(self, doc_id=None, title=None, text=None, original_words=None):
+    def __init__(self, doc_id=None, title=None, text=None, original_words=None, bigram_words=None):
         self.doc_id = doc_id
         self.title = title
         self.text = text
         self.original_words = original_words
+        self.bigram_words = bigram_words
         self._bag_of_words = {'text':None, 'title':None, 'all':None}
 
     def __getstate__(self):
@@ -31,9 +32,10 @@ class Doc:
         text = Doc.extract_text(root)
         prepared_title = Text_cleaner.prepare_text(title)
         prepared_text = Text_cleaner.prepare_text(text)
+        bigram_words = set(Text_cleaner.bigram_cleaner(title) + Text_cleaner.bigram_cleaner(text))
 
         original_words = title + " " + text 
-        return cls(doc_id, prepared_title, prepared_text, original_words)
+        return cls(doc_id, prepared_title, prepared_text, original_words, bigram_words)
 
     @classmethod
     def from_query(cls, title, text):

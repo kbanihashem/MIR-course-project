@@ -26,7 +26,7 @@ class Text_cleaner:
         return "$" if w == "" else w
 
     @staticmethod
-    def prepare_text(text):    
+    def prepare_text(text, should_stem=True):    
         normalizer = Normalizer()
         text = normalizer.normalize(text)
         tokenized = word_tokenize(text)
@@ -39,8 +39,11 @@ class Text_cleaner:
 
         punc_free = list(filter(lambda x: x != '$', map(fix_word, tokenized)))
         stemmer = Stemmer()
-        stemmed_list = list(filter(lambda x: x != '', map(stemmer.stem, punc_free)))
-        
+        if should_stem:
+            stemmed_list = list(filter(lambda x: x != '', map(stemmer.stem, punc_free)))
+        else:
+            stemmed_list = punc_free
+
         return stemmed_list
 
     @staticmethod
@@ -51,6 +54,10 @@ class Text_cleaner:
         real_query = re.sub('[ ]+', ' ', real_query)
         exact = [li[i] for i in range(len(li)) if i % 2 == 1]
         return real_query, exact
+
+    @staticmethod
+    def bigram_cleaner(text):
+        return prepare_text(text, should_stem=False)
 
 class Eval_calc:
 

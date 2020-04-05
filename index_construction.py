@@ -14,6 +14,8 @@ class RetrievalIndex:
         self.vecs = None
         self.consts = None
         self.modified = False
+        self.bigram_words = dict()
+        self.bigram_index = None #TODO
 
     def save(self, file_path):
         with open(file_path, 'wb') as f:
@@ -52,6 +54,11 @@ class RetrievalIndex:
         self.docs[doc_id] = doc
         for word, position, doc_part in doc.info_iterator:
             self.word_index_add_doc(word, position, doc_id, doc_part)
+        
+        #bigram
+        for word in doc.bigram_words:
+            self.bigram_words.setdefault(word, set()).add(doc_id)
+            self.bigram_index.add_word(word)
 
     def remove_doc(self, doc_id, raise_on_not_exists=True):
 
@@ -67,6 +74,13 @@ class RetrievalIndex:
         for word, position, doc_part in doc.info_iterator:
             self.word_index_remove_doc(word, doc_id)
         del self.docs[doc_id]
+
+        #bigram
+        for word in doc.bigram_words:
+            self.bigram_words[word].remove(doc_id)
+            if not self.bigram_words[word]:
+                del self.bigram_words[word]
+                self.bigram_index.remove_word(word)
 
     def word_index_add_doc(self, word, position, doc_id, doc_part):
         self.index.setdefault(word, {}).setdefault(doc_id, {}).setdefault(doc_part, []).append(position)
