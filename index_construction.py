@@ -140,7 +140,9 @@ class RetrievalIndex:
                     part_score[part] += doc_v[part].get(term, 0) * w_q
                 
                 if should_divide:
-                    normalization_factor = self.consts[doc_id][part] * const[part] + EPSILON
+                    modified_vector = {term: doc_v['text'].get(term, 0) for term in v[part].keys()}
+                    new_contant = Tf_calc.const(modified_vector)
+                    normalization_factor = new_contant * const[part] + EPSILON
                 else:
                     normalization_factor = 1
 
