@@ -4,27 +4,41 @@ class Bigram:
     def __init__(self):
         #bigram -> {word1, word2, ... wordn}
         self.bigram_index = dict()
-        self.word_set = set()
+        self.word_count = dict()
 
     def add_word(self, word):
-        self.word_set.add(word)
+
+        if word in self.word_count:
+            self.word_count[word] += 1
+            return
+
+        self.word_count[word] = 1
         bigrams = Bigram.shatter(word)
         for bigram in bigrams:
-            self.bigram_index.setdefault(bigram, []).add(word)
+            self.bigram_index.setdefault(bigram, set()).add(word)
 
     def remove_word(self, word):
 
-        if word in self.word_set:
-            self.word_set.remove(word)
+        if word not in self.word_count:
+            raise ValueError("Word not in index")
 
-        bigrams = Bigram.shatter(word)
-        for bigram in bigrams:
-            bigram_set = self.bigram_index[bigram]
-            if word in bigram_set:
-                bigram_set.remove(word)
+        self.word_count[word] -= 1
+        if self.word_count[word] == 0:
+            del self.word_count[word]
+            for bigram in Bigram.shatter(word):
+                #special case for گوناگون. 
+                bigram_set = self.bigram_index.get(bigram)
+                if not bigram_set:
+                    continue
+
+                if word in bigram_set:
+                    bigram_set.remove(word)
+                if not bigram_set:
+                    del self.bigram_index[bigram]
 
     @staticmethod
     def shatter(word):
+        word = "$" + word + "*"
         n = len(word)
         return [word[i:i + 2] for i in range(n - 1)]
 

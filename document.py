@@ -32,7 +32,7 @@ class Doc:
         text = Doc.extract_text(root)
         prepared_title = Text_cleaner.prepare_text(title)
         prepared_text = Text_cleaner.prepare_text(text)
-        bigram_words = set(Text_cleaner.bigram_cleaner(title) + Text_cleaner.bigram_cleaner(text))
+        bigram_words = Text_cleaner.bigram_cleaner(title) + Text_cleaner.bigram_cleaner(text)
 
         original_words = title + " " + text 
         return cls(doc_id, prepared_title, prepared_text, original_words, bigram_words)

@@ -5,6 +5,7 @@ import pickle
 
 from document import Doc
 from helper import Tf_calc, EPSILON, Text_cleaner
+from bigram import Bigram
 
 class RetrievalIndex:
 
@@ -14,8 +15,7 @@ class RetrievalIndex:
         self.vecs = None
         self.consts = None
         self.modified = False
-        self.bigram_words = dict()
-        self.bigram_index = None #TODO
+        self.bigram_index = Bigram()
 
     def save(self, file_path):
         with open(file_path, 'wb') as f:
@@ -57,7 +57,6 @@ class RetrievalIndex:
         
         #bigram
         for word in doc.bigram_words:
-            self.bigram_words.setdefault(word, set()).add(doc_id)
             self.bigram_index.add_word(word)
 
     def remove_doc(self, doc_id, raise_on_not_exists=True):
@@ -77,10 +76,7 @@ class RetrievalIndex:
 
         #bigram
         for word in doc.bigram_words:
-            self.bigram_words[word].remove(doc_id)
-            if not self.bigram_words[word]:
-                del self.bigram_words[word]
-                self.bigram_index.remove_word(word)
+            self.bigram_index.remove_word(word)
 
     def word_index_add_doc(self, word, position, doc_id, doc_part):
         self.index.setdefault(word, {}).setdefault(doc_id, {}).setdefault(doc_part, []).append(position)

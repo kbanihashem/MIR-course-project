@@ -20,11 +20,6 @@ class Text_cleaner:
     punct_list = "/;.,-=\[\]_+()*&^%$#!~|}{:?><.،-:؛÷ًًٌٍَُِّ'؟\"\'\\"
     punct_regex = "[%s]" % (r"/;.,-=\[\]_+()*&^%$#!~|}{:?><.-:؛÷ًًٌٍَُِّ'؟" + "\"\'")
 
-    def fix_word(w):
-        for c in Text_cleaner.punct_list:
-            w = w.replace(c, '')
-        return "$" if w == "" else w
-
     @staticmethod
     def prepare_text(text, should_stem=True):    
         normalizer = Normalizer()
@@ -57,7 +52,14 @@ class Text_cleaner:
 
     @staticmethod
     def bigram_cleaner(text):
-        return prepare_text(text, should_stem=False)
+        text = re.sub(Text_cleaner.persian_regex, ' ', text)
+        text = re.sub('[ ]+', ' ', text)
+
+        normalizer = Normalizer()
+        text = normalizer.normalize(text)
+
+        tokenized = word_tokenize(text)
+        return tokenized
 
 class Eval_calc:
 

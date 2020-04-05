@@ -9,6 +9,12 @@ def main():
     test7()
 #    test10()
 
+#IMPORTANT
+def test7():
+    index = RetrievalIndex.from_xml(XML_PATH, max_num=10)
+    index.make_vectors()
+    index.save(INDEX_PATH)
+
 def test13():
     index = RetrievalIndex.from_xml(XML_PATH, max_num=10)
     index.make_vectors()
@@ -48,11 +54,6 @@ def test8():
     q = index.query(query_title, query_text, k=10)
     print(q)
 
-#IMPORTANT
-def test7():
-    index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
-    index.make_vectors()
-    index.save(INDEX_PATH)
 
 def test6():
     document = Doc.create_from_xml('test_doc.xml')
