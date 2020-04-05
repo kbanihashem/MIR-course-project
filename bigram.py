@@ -1,4 +1,5 @@
 import numpy as np
+from helper import Text_cleaner
 class Bigram:
 
     def __init__(self):
@@ -62,16 +63,26 @@ class Bigram:
         return m[l1 - 1, l2 - 1]
 
 
+    def jaccard(self, word1, word2):
+        s1 = set(Bigram.shatter(word1))
+        s2 = set(Bigram.shatter(word2))
+        return len(set.intersection(s1, s2)) / len(set.union(s1, s2))
 
-    def extract_top_bigram(self, word):
-        pass
+    def top_jacard(self, word, k=100):
+        li = [(w, self.jaccard(word, w)) for w in self.word_count]
+        li.sort(key=lambda x: x[1], reverse=True)
+        return [x[0] for x in li[:k]]
+
+    def correct_query(self, text):
+        words = Text_cleaner.bigram_cleaner(text)
+        return ' '.join(map(self.fix_word, words))
 
     def fix_word(self, word):
-        if w in self.word_set:
-            return w
+        if word in self.word_count:
+            return word
 
-        candidates = self.extract_top_bigram(word)
-        return max(candidates, key = lambda w: edit_distance(word, w), reverse=True)
+        candidates = self.top_jacard(word)
+        return min(candidates, key = lambda w: Bigram.edit_distance(word, w))
 
     def __getstate__(self):
         return self.__dict__

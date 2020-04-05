@@ -11,7 +11,7 @@ def main():
 
 #IMPORTANT
 def test7():
-    index = RetrievalIndex.from_xml(XML_PATH, max_num=10)
+    index = RetrievalIndex.from_xml(XML_PATH, max_num=None)
     index.make_vectors()
     index.save(INDEX_PATH)
 
