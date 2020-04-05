@@ -43,6 +43,7 @@ class Text_cleaner:
 
     persian_regex = "[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی abcdefghijklmnopqrstuvwxyz]+" 
     punct_list = "/;.,-=\[\]_+()*&^%$#!~|}{:?><.،-:؛÷ًًٌٍَُِّ'؟\"\'\\"
+    punct_regex = "[%s]" % (r"/;.,-=\[\]_+()*&^%$#!~|}{:?><.-:؛÷ًًٌٍَُِّ'؟" + "\"\'")
 
     def fix_word(w):
         for c in Text_cleaner.punct_list:
@@ -56,8 +57,9 @@ class Text_cleaner:
         tokenized = word_tokenize(text)
         #نگارشی
         def fix_word(w):
-            for c in Text_cleaner.punct_list:
-                w = w.replace(c, '')
+#            for c in Text_cleaner.punct_list:
+#                w = w.replace(c, '')
+            w = re.sub(Text_cleaner.punct_regex, '', w).replace('،', '')
             return "$" if w == "" else w
 
         punc_free = list(filter(lambda x: x != '$', map(fix_word, tokenized)))

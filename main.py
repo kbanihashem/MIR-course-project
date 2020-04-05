@@ -2,7 +2,7 @@ from document import Doc
 from index_construction import RetrievalIndex
 from evaluate import IREvaluator
 
-XML_PATH = '../data/Persian.xml'
+XML_PATH = './data/Persian.xml'
 INDEX_PATH = 'IR_INDEX.dat'
 
 def main():
@@ -31,7 +31,7 @@ def test10():
     index = RetrievalIndex.load(INDEX_PATH)
     system_evaluator = IREvaluator(index)
     for metric in IREvaluator.funcs:
-        print(metric, system_evaluator.evaluate('all', metric, method='ltn-lnn', verbose=True))
+        print(metric, system_evaluator.evaluate('all', metric, method='ltc-lnn', verbose=False))
 
 
 def test9():
