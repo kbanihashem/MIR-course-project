@@ -42,7 +42,7 @@ class RetrievalIndex:
 
     def add_doc(self, doc, raise_on_exists=True):
 
-        self.set_modified(True)
+        self.set_modified()
         doc_id = doc.doc_id
 
         if doc_id in self.docs:
@@ -57,7 +57,7 @@ class RetrievalIndex:
 
     def remove_doc(self, doc_id, raise_on_not_exists=True):
 
-        self.set_modified(True)
+        self.set_modified()
         self.modified = True
         if doc_id not in self.docs:
             if raise_on_not_exists:
@@ -187,9 +187,9 @@ class RetrievalIndex:
         self.cached_consts[method] = self.consts
         self.modified[method] = False
 
-    def set_modified(self, value):
+    def set_modified(self):
         for method in self.modified:
-            self.modified[method] = value
+            self.modified[method] = True
 
     @property
     def N(self):
