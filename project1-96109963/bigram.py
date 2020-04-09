@@ -1,7 +1,5 @@
 import numpy as np
 from helper import Text_cleaner
-from functools import reduce 
-
 class Bigram:
 
     def __init__(self):
@@ -70,11 +68,8 @@ class Bigram:
         s2 = set(Bigram.shatter(word2))
         return len(set.intersection(s1, s2)) / len(set.union(s1, s2))
 
-    def bigram_union(self, word):
-        return reduce(set.union, map(lambda b: self.bigram_index[b], Bigram.shatter(word)))
-
     def top_jacard(self, word, k=100):
-        li = [(w, self.jaccard(word, w)) for w in self.bigram_union(word)]
+        li = [(w, self.jaccard(word, w)) for w in self.word_count]
         li.sort(key=lambda x: x[1], reverse=True)
         return [x[0] for x in li[:k]]
 
