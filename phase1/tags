@@ -1,0 +1,254 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Bigram	bigram.py	/^class Bigram:$/;"	c
+Bigram	index_construction.py	/^from bigram import Bigram$/;"	i
+Bigram	project1-96109963/bigram.py	/^class Bigram:$/;"	c
+Bigram	project1-96109963/index_construction.py	/^from bigram import Bigram$/;"	i
+Counter	document.py	/^from collections import Counter$/;"	i
+Counter	project1-96109963/document.py	/^from collections import Counter$/;"	i
+Doc	document.py	/^class Doc:$/;"	c
+Doc	index_construction.py	/^from document import Doc$/;"	i
+Doc	main.py	/^from document import Doc$/;"	i
+Doc	project1-96109963/document.py	/^class Doc:$/;"	c
+Doc	project1-96109963/index_construction.py	/^from document import Doc$/;"	i
+EPSILON	helper.py	/^EPSILON = 1e-7$/;"	v
+EPSILON	index_construction.py	/^from helper import Tf_calc, EPSILON, Text_cleaner$/;"	i
+EPSILON	project1-96109963/helper.py	/^EPSILON = 1e-7$/;"	v
+EPSILON	project1-96109963/index_construction.py	/^from helper import Tf_calc, EPSILON, Text_cleaner$/;"	i
+ET	document.py	/^import xml.etree.ElementTree as ET$/;"	i
+ET	index_construction.py	/^import xml.etree.ElementTree as ET$/;"	i
+ET	project1-96109963/document.py	/^import xml.etree.ElementTree as ET$/;"	i
+ET	project1-96109963/index_construction.py	/^import xml.etree.ElementTree as ET$/;"	i
+Eval_calc	evaluate.py	/^from helper import Eval_calc, mean, Text_cleaner$/;"	i
+Eval_calc	helper.py	/^class Eval_calc:$/;"	c
+Eval_calc	project1-96109963/evaluate.py	/^from helper import Eval_calc, mean, Text_cleaner$/;"	i
+Eval_calc	project1-96109963/helper.py	/^class Eval_calc:$/;"	c
+F	helper.py	/^    def F(truth, out):$/;"	m	class:Eval_calc
+F	project1-96109963/helper.py	/^    def F(truth, out):$/;"	m	class:Eval_calc
+INDEX_PATH	main.py	/^INDEX_PATH = 'IR_INDEX.dat'$/;"	v
+IREvaluator	evaluate.py	/^class IREvaluator:$/;"	c
+IREvaluator	main.py	/^from evaluate import IREvaluator$/;"	i
+IREvaluator	project1-96109963/evaluate.py	/^class IREvaluator:$/;"	c
+MAP	helper.py	/^    def MAP(truth, out):$/;"	m	class:Eval_calc
+MAP	project1-96109963/helper.py	/^    def MAP(truth, out):$/;"	m	class:Eval_calc
+N	index_construction.py	/^    def N(self):$/;"	m	class:RetrievalIndex
+N	project1-96109963/index_construction.py	/^    def N(self):$/;"	m	class:RetrievalIndex
+NDCG	helper.py	/^    def NDCG(truth, out):$/;"	m	class:Eval_calc
+NDCG	project1-96109963/helper.py	/^    def NDCG(truth, out):$/;"	m	class:Eval_calc
+Normalizer	document.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Normalizer	helper.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Normalizer	project1-96109963/document.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Normalizer	project1-96109963/helper.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+PARTS	document.py	/^    PARTS = ('text', 'title')$/;"	v	class:Doc
+PARTS	project1-96109963/document.py	/^    PARTS = ('text', 'title')$/;"	v	class:Doc
+R_precision	helper.py	/^    def R_precision(truth, out):$/;"	m	class:Eval_calc
+R_precision	project1-96109963/helper.py	/^    def R_precision(truth, out):$/;"	m	class:Eval_calc
+RetrievalIndex	evaluate.py	/^from index_construction import RetrievalIndex$/;"	i
+RetrievalIndex	index_construction.py	/^class RetrievalIndex:$/;"	c
+RetrievalIndex	main.py	/^from index_construction import RetrievalIndex$/;"	i
+RetrievalIndex	project1-96109963/evaluate.py	/^from index_construction import RetrievalIndex$/;"	i
+RetrievalIndex	project1-96109963/index_construction.py	/^class RetrievalIndex:$/;"	c
+Stemmer	document.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Stemmer	helper.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Stemmer	project1-96109963/document.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Stemmer	project1-96109963/helper.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+Text_cleaner	bigram.py	/^from helper import Text_cleaner$/;"	i
+Text_cleaner	document.py	/^from helper import Tf_calc, Text_cleaner$/;"	i
+Text_cleaner	evaluate.py	/^from helper import Eval_calc, mean, Text_cleaner$/;"	i
+Text_cleaner	helper.py	/^class Text_cleaner:$/;"	c
+Text_cleaner	index_construction.py	/^from helper import Tf_calc, EPSILON, Text_cleaner$/;"	i
+Text_cleaner	project1-96109963/bigram.py	/^from helper import Text_cleaner$/;"	i
+Text_cleaner	project1-96109963/document.py	/^from helper import Tf_calc, Text_cleaner$/;"	i
+Text_cleaner	project1-96109963/evaluate.py	/^from helper import Eval_calc, mean, Text_cleaner$/;"	i
+Text_cleaner	project1-96109963/helper.py	/^class Text_cleaner:$/;"	c
+Text_cleaner	project1-96109963/index_construction.py	/^from helper import Tf_calc, EPSILON, Text_cleaner$/;"	i
+Tf_calc	document.py	/^from helper import Tf_calc, Text_cleaner$/;"	i
+Tf_calc	helper.py	/^class Tf_calc:$/;"	c
+Tf_calc	index_construction.py	/^from helper import Tf_calc, EPSILON, Text_cleaner$/;"	i
+Tf_calc	project1-96109963/document.py	/^from helper import Tf_calc, Text_cleaner$/;"	i
+Tf_calc	project1-96109963/helper.py	/^class Tf_calc:$/;"	c
+Tf_calc	project1-96109963/index_construction.py	/^from helper import Tf_calc, EPSILON, Text_cleaner$/;"	i
+XML_PATH	main.py	/^XML_PATH = '.\/data\/Persian.xml'$/;"	v
+__getstate__	bigram.py	/^    def __getstate__(self):$/;"	m	class:Bigram	file:
+__getstate__	document.py	/^    def __getstate__(self):$/;"	m	class:Doc	file:
+__getstate__	index_construction.py	/^    def __getstate__(self):$/;"	m	class:RetrievalIndex	file:
+__getstate__	project1-96109963/bigram.py	/^    def __getstate__(self):$/;"	m	class:Bigram	file:
+__getstate__	project1-96109963/document.py	/^    def __getstate__(self):$/;"	m	class:Doc	file:
+__getstate__	project1-96109963/index_construction.py	/^    def __getstate__(self):$/;"	m	class:RetrievalIndex	file:
+__init__	bigram.py	/^    def __init__(self):$/;"	m	class:Bigram
+__init__	document.py	/^    def __init__(self, doc_id=None, title=None, text=None, original_words=None, bigram_words=None):$/;"	m	class:Doc
+__init__	evaluate.py	/^    def __init__(self, retrieval_index=None,$/;"	m	class:IREvaluator
+__init__	index_construction.py	/^    def __init__(self):$/;"	m	class:RetrievalIndex
+__init__	project1-96109963/bigram.py	/^    def __init__(self):$/;"	m	class:Bigram
+__init__	project1-96109963/document.py	/^    def __init__(self, doc_id=None, title=None, text=None, original_words=None, bigram_words=None):$/;"	m	class:Doc
+__init__	project1-96109963/evaluate.py	/^    def __init__(self, retrieval_index=None,$/;"	m	class:IREvaluator
+__init__	project1-96109963/index_construction.py	/^    def __init__(self):$/;"	m	class:RetrievalIndex
+__repr__	document.py	/^    def __repr__(self):$/;"	m	class:Doc	file:
+__repr__	project1-96109963/document.py	/^    def __repr__(self):$/;"	m	class:Doc	file:
+__setstate__	bigram.py	/^    def __setstate__(self, d):$/;"	m	class:Bigram	file:
+__setstate__	document.py	/^    def __setstate__(self, d):$/;"	m	class:Doc	file:
+__setstate__	index_construction.py	/^    def __setstate__(self, d):$/;"	m	class:RetrievalIndex	file:
+__setstate__	project1-96109963/bigram.py	/^    def __setstate__(self, d):$/;"	m	class:Bigram	file:
+__setstate__	project1-96109963/document.py	/^    def __setstate__(self, d):$/;"	m	class:Doc	file:
+__setstate__	project1-96109963/index_construction.py	/^    def __setstate__(self, d):$/;"	m	class:RetrievalIndex	file:
+__str__	document.py	/^    def __str__(self):$/;"	m	class:Doc	file:
+__str__	index_construction.py	/^    def __str__(self):$/;"	m	class:RetrievalIndex	file:
+__str__	project1-96109963/document.py	/^    def __str__(self):$/;"	m	class:Doc	file:
+__str__	project1-96109963/index_construction.py	/^    def __str__(self):$/;"	m	class:RetrievalIndex	file:
+add_doc	index_construction.py	/^    def add_doc(self, doc, raise_on_exists=True):$/;"	m	class:RetrievalIndex
+add_doc	project1-96109963/index_construction.py	/^    def add_doc(self, doc, raise_on_exists=True):$/;"	m	class:RetrievalIndex
+add_word	bigram.py	/^    def add_word(self, word):$/;"	m	class:Bigram
+add_word	project1-96109963/bigram.py	/^    def add_word(self, word):$/;"	m	class:Bigram
+bag_of_words	document.py	/^    def bag_of_words(self, part='text'):$/;"	m	class:Doc
+bag_of_words	project1-96109963/document.py	/^    def bag_of_words(self, part='text'):$/;"	m	class:Doc
+bigram_cleaner	helper.py	/^    def bigram_cleaner(text):$/;"	m	class:Text_cleaner
+bigram_cleaner	project1-96109963/helper.py	/^    def bigram_cleaner(text):$/;"	m	class:Text_cleaner
+bigram_union	bigram.py	/^    def bigram_union(self, word):$/;"	m	class:Bigram
+const	helper.py	/^    def const(v):$/;"	m	class:Tf_calc
+const	project1-96109963/helper.py	/^    def const(v):$/;"	m	class:Tf_calc
+correct_query	bigram.py	/^    def correct_query(self, text):$/;"	m	class:Bigram
+correct_query	project1-96109963/bigram.py	/^    def correct_query(self, text):$/;"	m	class:Bigram
+create_from_xml	document.py	/^    def create_from_xml(cls, xml, method='file'):$/;"	m	class:Doc
+create_from_xml	project1-96109963/document.py	/^    def create_from_xml(cls, xml, method='file'):$/;"	m	class:Doc
+create_list_from_xml	document.py	/^    def create_list_from_xml(cls, xml, max_num=None, method='file'):$/;"	m	class:Doc
+create_list_from_xml	project1-96109963/document.py	/^    def create_list_from_xml(cls, xml, max_num=None, method='file'):$/;"	m	class:Doc
+distinct_terms	document.py	/^    def distinct_terms(self, part='text'):$/;"	m	class:Doc
+distinct_terms	project1-96109963/document.py	/^    def distinct_terms(self, part='text'):$/;"	m	class:Doc
+edit_distance	bigram.py	/^    def edit_distance(word1, word2):$/;"	m	class:Bigram
+edit_distance	project1-96109963/bigram.py	/^    def edit_distance(word1, word2):$/;"	m	class:Bigram
+etree	document.py	/^import xml.etree.ElementTree as ET$/;"	i
+etree	index_construction.py	/^import xml.etree.ElementTree as ET$/;"	i
+etree	project1-96109963/document.py	/^import xml.etree.ElementTree as ET$/;"	i
+etree	project1-96109963/index_construction.py	/^import xml.etree.ElementTree as ET$/;"	i
+evaluate	evaluate.py	/^    def evaluate(self, query_id='all', metric='F', method='ltn-lnn', verbose=False):$/;"	m	class:IREvaluator
+evaluate	project1-96109963/evaluate.py	/^    def evaluate(self, query_id='all', metric='F', method='ltn-lnn', verbose=False):$/;"	m	class:IREvaluator
+extract_text	document.py	/^    def extract_text(root):$/;"	m	class:Doc
+extract_text	project1-96109963/document.py	/^    def extract_text(root):$/;"	m	class:Doc
+extract_title	document.py	/^    def extract_title(root):$/;"	m	class:Doc
+extract_title	project1-96109963/document.py	/^    def extract_title(root):$/;"	m	class:Doc
+fix_word	bigram.py	/^    def fix_word(self, word):$/;"	m	class:Bigram
+fix_word	helper.py	/^        def fix_word(w):$/;"	f	function:Text_cleaner.prepare_text
+fix_word	project1-96109963/bigram.py	/^    def fix_word(self, word):$/;"	m	class:Bigram
+fix_word	project1-96109963/helper.py	/^        def fix_word(w):$/;"	f	function:Text_cleaner.prepare_text
+from_query	document.py	/^    def from_query(cls, title, text):$/;"	m	class:Doc
+from_query	project1-96109963/document.py	/^    def from_query(cls, title, text):$/;"	m	class:Doc
+from_xml	index_construction.py	/^    def from_xml(cls, xml, max_num=None, method='file'):$/;"	m	class:RetrievalIndex
+from_xml	project1-96109963/index_construction.py	/^    def from_xml(cls, xml, max_num=None, method='file'):$/;"	m	class:RetrievalIndex
+funcs	evaluate.py	/^    funcs = {'F': Eval_calc.F,$/;"	v	class:IREvaluator
+funcs	project1-96109963/evaluate.py	/^    funcs = {'F': Eval_calc.F,$/;"	v	class:IREvaluator
+get_exact_docs	index_construction.py	/^    def get_exact_docs(self, li_title, li_text, method="standard"):$/;"	m	class:RetrievalIndex
+get_exact_docs	project1-96109963/index_construction.py	/^    def get_exact_docs(self, li_title, li_text, method="standard"):$/;"	m	class:RetrievalIndex
+get_field_number	document.py	/^    def get_field_number(root, name):$/;"	m	class:Doc
+get_field_number	project1-96109963/document.py	/^    def get_field_number(root, name):$/;"	m	class:Doc
+get_part_iterator	document.py	/^    def get_part_iterator(self, part):$/;"	m	class:Doc
+get_part_iterator	project1-96109963/document.py	/^    def get_part_iterator(self, part):$/;"	m	class:Doc
+get_posting_list	index_construction.py	/^    def get_posting_list(self, word, raise_on_not_exists=True):$/;"	m	class:RetrievalIndex
+get_posting_list	project1-96109963/index_construction.py	/^    def get_posting_list(self, word, raise_on_not_exists=True):$/;"	m	class:RetrievalIndex
+get_root	document.py	/^    def get_root(xml, method):$/;"	m	class:Doc
+get_root	project1-96109963/document.py	/^    def get_root(xml, method):$/;"	m	class:Doc
+glob	evaluate.py	/^import glob$/;"	i
+glob	project1-96109963/evaluate.py	/^import glob$/;"	i
+has_exact	document.py	/^    def has_exact(self, query):$/;"	m	class:Doc
+has_exact	project1-96109963/document.py	/^    def has_exact(self, query):$/;"	m	class:Doc
+idf	index_construction.py	/^    def idf(self, term, part):$/;"	m	class:RetrievalIndex
+idf	project1-96109963/index_construction.py	/^    def idf(self, term, part):$/;"	m	class:RetrievalIndex
+idf_transform	helper.py	/^    def idf_transform(df, N):$/;"	m	class:Tf_calc
+idf_transform	project1-96109963/helper.py	/^    def idf_transform(df, N):$/;"	m	class:Tf_calc
+info_iterator	document.py	/^    def info_iterator(self):$/;"	m	class:Doc
+info_iterator	project1-96109963/document.py	/^    def info_iterator(self):$/;"	m	class:Doc
+is_fine	index_construction.py	/^            def is_fine(doc_id):$/;"	f	function:RetrievalIndex.get_exact_docs
+is_fine	project1-96109963/index_construction.py	/^            def is_fine(doc_id):$/;"	f	function:RetrievalIndex.get_exact_docs
+jaccard	bigram.py	/^    def jaccard(self, word1, word2):$/;"	m	class:Bigram
+jaccard	project1-96109963/bigram.py	/^    def jaccard(self, word1, word2):$/;"	m	class:Bigram
+load	index_construction.py	/^    def load(cls, file_path):$/;"	m	class:RetrievalIndex
+load	project1-96109963/index_construction.py	/^    def load(cls, file_path):$/;"	m	class:RetrievalIndex
+main	main.py	/^def main():$/;"	f
+make_vectors	index_construction.py	/^    def make_vectors(self):$/;"	m	class:RetrievalIndex
+make_vectors	project1-96109963/index_construction.py	/^    def make_vectors(self):$/;"	m	class:RetrievalIndex
+mean	evaluate.py	/^from helper import Eval_calc, mean, Text_cleaner$/;"	i
+mean	helper.py	/^def mean(li):$/;"	f
+mean	project1-96109963/evaluate.py	/^from helper import Eval_calc, mean, Text_cleaner$/;"	i
+mean	project1-96109963/helper.py	/^def mean(li):$/;"	f
+np	bigram.py	/^import numpy as np$/;"	i
+np	document.py	/^import numpy as np$/;"	i
+np	helper.py	/^import numpy as np$/;"	i
+np	index_construction.py	/^import numpy as np$/;"	i
+np	project1-96109963/bigram.py	/^import numpy as np$/;"	i
+np	project1-96109963/document.py	/^import numpy as np$/;"	i
+np	project1-96109963/helper.py	/^import numpy as np$/;"	i
+np	project1-96109963/index_construction.py	/^import numpy as np$/;"	i
+persian_regex	helper.py	/^    persian_regex = "[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی abcdefghijklmnopqrstuvwxyz]+" $/;"	v	class:Text_cleaner
+persian_regex	project1-96109963/helper.py	/^    persian_regex = "[^آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی abcdefghijklmnopqrstuvwxyz]+" $/;"	v	class:Text_cleaner
+pickle	index_construction.py	/^import pickle$/;"	i
+pickle	project1-96109963/index_construction.py	/^import pickle$/;"	i
+prepare_text	helper.py	/^    def prepare_text(text, should_stem=True):    $/;"	m	class:Text_cleaner
+prepare_text	project1-96109963/helper.py	/^    def prepare_text(text, should_stem=True):    $/;"	m	class:Text_cleaner
+punct_regex	helper.py	/^    punct_regex = "[%s]" % (r"\/;.,-=\\[\\]_+()*&^%$#!~|}{:?><.-:؛÷ًًٌٍَُِّ'؟" + "\\"\\'")$/;"	v	class:Text_cleaner
+punct_regex	project1-96109963/helper.py	/^    punct_regex = "[%s]" % (r"\/;.,-=\\[\\]_+()*&^%$#!~|}{:?><.-:؛÷ًًٌٍَُِّ'؟" + "\\"\\'")$/;"	v	class:Text_cleaner
+q_and_res_path	evaluate.py	/^    def q_and_res_path(self, num='all'):$/;"	m	class:IREvaluator
+q_and_res_path	project1-96109963/evaluate.py	/^    def q_and_res_path(self, num='all'):$/;"	m	class:IREvaluator
+query	index_construction.py	/^    def query(self, query_title, query_text, should_divide=False, k=15, title_ratio=2, flatten=True, exact_method="standard"):$/;"	m	class:RetrievalIndex
+query	project1-96109963/index_construction.py	/^    def query(self, query_title, query_text, should_divide=False, k=15, title_ratio=2, flatten=True, exact_method="standard"):$/;"	m	class:RetrievalIndex
+query_cleaner	helper.py	/^    def query_cleaner(query):$/;"	m	class:Text_cleaner
+query_cleaner	project1-96109963/helper.py	/^    def query_cleaner(query):$/;"	m	class:Text_cleaner
+query_path	evaluate.py	/^    def query_path(self, num='all'):$/;"	m	class:IREvaluator
+query_path	project1-96109963/evaluate.py	/^    def query_path(self, num='all'):$/;"	m	class:IREvaluator
+re	document.py	/^import re$/;"	i
+re	helper.py	/^import re$/;"	i
+re	index_construction.py	/^import re$/;"	i
+re	project1-96109963/document.py	/^import re$/;"	i
+re	project1-96109963/helper.py	/^import re$/;"	i
+re	project1-96109963/index_construction.py	/^import re$/;"	i
+reduce	bigram.py	/^from functools import reduce $/;"	i
+remove_doc	index_construction.py	/^    def remove_doc(self, doc_id, raise_on_not_exists=True):$/;"	m	class:RetrievalIndex
+remove_doc	project1-96109963/index_construction.py	/^    def remove_doc(self, doc_id, raise_on_not_exists=True):$/;"	m	class:RetrievalIndex
+remove_word	bigram.py	/^    def remove_word(self, word):$/;"	m	class:Bigram
+remove_word	project1-96109963/bigram.py	/^    def remove_word(self, word):$/;"	m	class:Bigram
+result_path	evaluate.py	/^    def result_path(self, num='all'):$/;"	m	class:IREvaluator
+result_path	project1-96109963/evaluate.py	/^    def result_path(self, num='all'):$/;"	m	class:IREvaluator
+save	index_construction.py	/^    def save(self, file_path):$/;"	m	class:RetrievalIndex
+save	project1-96109963/index_construction.py	/^    def save(self, file_path):$/;"	m	class:RetrievalIndex
+set_modified	index_construction.py	/^    def set_modified(self):$/;"	m	class:RetrievalIndex
+set_modified	project1-96109963/index_construction.py	/^    def set_modified(self):$/;"	m	class:RetrievalIndex
+shatter	bigram.py	/^    def shatter(word):$/;"	m	class:Bigram
+shatter	project1-96109963/bigram.py	/^    def shatter(word):$/;"	m	class:Bigram
+test1	main.py	/^def test1():$/;"	f
+test10	main.py	/^def test10():$/;"	f
+test11	main.py	/^def test11():$/;"	f
+test12	main.py	/^def test12():$/;"	f
+test13	main.py	/^def test13():$/;"	f
+test2	main.py	/^def test2():$/;"	f
+test3	main.py	/^def test3():$/;"	f
+test4	main.py	/^def test4():$/;"	f
+test5	main.py	/^def test5():$/;"	f
+test6	main.py	/^def test6():$/;"	f
+test7	main.py	/^def test7():$/;"	f
+test8	main.py	/^def test8():$/;"	f
+test9	main.py	/^def test9():$/;"	f
+test_docs	main.py	/^def test_docs():$/;"	f
+tf	index_construction.py	/^    def tf(self, term, doc_id, part):$/;"	m	class:RetrievalIndex
+tf	project1-96109963/index_construction.py	/^    def tf(self, term, doc_id, part):$/;"	m	class:RetrievalIndex
+tf_idf	document.py	/^    def tf_idf(self):$/;"	m	class:Doc
+tf_idf	index_construction.py	/^    def tf_idf(self, term, doc_id, part):$/;"	m	class:RetrievalIndex
+tf_idf	project1-96109963/document.py	/^    def tf_idf(self):$/;"	m	class:Doc
+tf_idf	project1-96109963/index_construction.py	/^    def tf_idf(self, term, doc_id, part):$/;"	m	class:RetrievalIndex
+top_jacard	bigram.py	/^    def top_jacard(self, word, k=100):$/;"	m	class:Bigram
+top_jacard	project1-96109963/bigram.py	/^    def top_jacard(self, word, k=100):$/;"	m	class:Bigram
+transform_tf	helper.py	/^    def transform_tf(tf):$/;"	m	class:Tf_calc
+transform_tf	project1-96109963/helper.py	/^    def transform_tf(tf):$/;"	m	class:Tf_calc
+word_index_add_doc	index_construction.py	/^    def word_index_add_doc(self, word, position, doc_id, doc_part):$/;"	m	class:RetrievalIndex
+word_index_add_doc	project1-96109963/index_construction.py	/^    def word_index_add_doc(self, word, position, doc_id, doc_part):$/;"	m	class:RetrievalIndex
+word_index_remove_doc	index_construction.py	/^    def word_index_remove_doc(self, word, doc_id, raise_on_not_exists=False):$/;"	m	class:RetrievalIndex
+word_index_remove_doc	project1-96109963/index_construction.py	/^    def word_index_remove_doc(self, word, doc_id, raise_on_not_exists=False):$/;"	m	class:RetrievalIndex
+word_tokenize	document.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+word_tokenize	helper.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+word_tokenize	project1-96109963/document.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+word_tokenize	project1-96109963/helper.py	/^from hazm import Normalizer, word_tokenize, Stemmer$/;"	i
+xml	document.py	/^import xml.etree.ElementTree as ET$/;"	i
+xml	index_construction.py	/^import xml.etree.ElementTree as ET$/;"	i
+xml	project1-96109963/document.py	/^import xml.etree.ElementTree as ET$/;"	i
+xml	project1-96109963/index_construction.py	/^import xml.etree.ElementTree as ET$/;"	i
