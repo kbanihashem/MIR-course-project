@@ -1,4 +1,5 @@
 import json
+import multiprocessing
 
 from corpus import Corpus
 from helper import cosine, most_repeated
@@ -21,14 +22,26 @@ class KNN:
         with open(path, 'r') as f:
             self.valid = json.load(f)
 
-    def evaluate(self, k=1, print_every=1, verbose=False, limit=None):
+    def eval_query(self, i, k):
+        self.query_ans[i] = self.closest(self.valid[i], k)
+
+    def evaluate(self, k=1, limit=None):
+        if limit is None:
+            limit = len(self.valid)
+        self.query_ans = [None] * len(self.valid)
+        p = [None] * len(self.valid)
+        for i, query in enumerate(self.valid):
+            p[i] = multiprocessing.Process(target=self.eval_query, args=(i, k))
+
+        print("starting")
+        for i in range(limit):
+            p[i].start()
+        for i in range(limit):
+            print(f"got {i}")
+            p[i].join()
+       
         log = []
         for i, query in enumerate(self.valid):
-            if limit is not None and i > limit:
-                break
-            if verbose and i % print_every == 0:
-                print(i)
-            y = query['category']
-            y_hat = self.closest(query, k)
-            log.append(y == y_hat) 
+            log.append(query['category'] == self.query_ans[i])
+
         return log
