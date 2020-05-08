@@ -14,7 +14,7 @@ def l2_norm(v):
     return np.sqrt(vec_dot(v, v))
 
 def cosine(v1, v2):
-    return vec_dot(v1, v2) / l2_norm(v1) / l2_norm(v2)
+    return vec_dot(v1, v2) #/ l2_norm(v1) / l2_norm(v2)
 
 def euclidean(v1, v2):
     diff = dict()
