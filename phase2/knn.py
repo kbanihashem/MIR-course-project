@@ -4,7 +4,7 @@ import threading
 import numpy as np
 
 from corpus import Corpus
-from helper import cosine, most_repeated
+from helper import cosine, most_repeated, sparse_to_numpy
 
 class KNN:
 
@@ -28,10 +28,17 @@ class KNN:
 
     def eval_query(self, i, k):
         self.query_ans[i] = self.closest(self.valid[i], k)
+    
+    def build_matrix(self):
+        q_li = []
+        for query in self.valid:
+            q_doc = self.corpus.doc_from_dict(query, is_query=True)
+            q_vec = self.corpus.get_vector(q_doc)
+            q_li.append(q_vec)
+        self.q_matrix = sparse_to_numpy(q_li, self.corpus.word_to_num.keys())
 
     def eval_many_queries(self, query_nums, k):
-        for i in query_nums:
-            self.eval_query(i, k)
+        self.corpus.build_np_vecs()
 
     def evaluate(self, k=1, limit=None, division_factor=3):
         if limit is None:

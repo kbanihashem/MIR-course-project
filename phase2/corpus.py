@@ -109,6 +109,9 @@ class Corpus:
             self.vecs[i] = self.get_vector(doc)
             self.l2[i] = helper.l2_norm(self.vecs[i])
 
+    def build_np_vecs(self):
+        self.np_vecs = helper.sparse_to_numpy(self.vecs, self.word_to_num.keys())
+
     def build_naive(self):
         self.number_of_occurences = np.zeros((len(self.word_to_num), self.num_categories), dtype=np.int64)
         self.class_doc_count = np.zeros(self.num_categories, dtype=np.int64)

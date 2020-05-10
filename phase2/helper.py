@@ -42,6 +42,9 @@ def sparse_to_numpy(li, keys):
     n = len(keys)
     ans = np.zeros((m, n))
     for i in range(m):
-        ans[i] = np.array(list(map(lambda j: li[i].get(j, 0), range(n))))
+        ans[i] = np.zeros(n)
+        for word in li[i]:
+            ans[i][word] = li[i][word]
+#        ans[i] = np.array(list(map(lambda j: li[i].get(j, 0), range(n))), dtype=np.float16)
     return ans
 
