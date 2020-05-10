@@ -14,7 +14,7 @@ def l2_norm(v):
     return np.sqrt(vec_dot(v, v))
 
 def cosine(v1, v2):
-    return vec_dot(v1, v2) #/ l2_norm(v1) / l2_norm(v2)
+    return -vec_dot(v1, v2) #/ l2_norm(v1) / l2_norm(v2)
 
 def euclidean(v1, v2):
     diff = dict()
@@ -36,3 +36,12 @@ def most_repeated(li):
         count_dict[x] += 1
 
     return max(count_dict.keys(), key=lambda x: count_dict[x])
+
+def sparse_to_numpy(li, keys):
+    m = len(li)
+    n = len(keys)
+    ans = np.zeros((m, n))
+    for i in range(m):
+        ans[i] = np.array(list(map(lambda j: li[i].get(j, 0), range(n))))
+    return ans
+

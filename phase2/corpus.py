@@ -97,5 +97,10 @@ class Corpus:
     def build_vectors(self):
         self.build_idf()
         self.vecs = [dict() for _ in range(len(self.docs))]
+        self.l2 = [None for _ in range(len(self.docs))]
         for i, doc in enumerate(self.docs):
             self.vecs[i] = self.get_vector(doc)
+            self.l2[i] = helper.l2_norm(self.vecs[i])
+
+    def build_naive(self):
+        number_of_occurences = np.zeros((len(self.word_to_num), len(self.docs)))
