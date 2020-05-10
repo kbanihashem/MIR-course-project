@@ -109,6 +109,9 @@ class Corpus:
             self.vecs[i] = self.get_vector(doc)
             self.l2[i] = helper.l2_norm(self.vecs[i])
 
+    def clear_np(self):
+        del self.np_vecs
+
     def build_np_vecs(self):
         self.np_vecs = helper.sparse_to_numpy(self.vecs, self.word_to_num.keys())
 
@@ -124,5 +127,5 @@ class Corpus:
     def clear_naive(self):
         del self.number_of_occurences
         del self.class_total_occurences
-        #TODO: check again
+        del self.class_doc_count
 
