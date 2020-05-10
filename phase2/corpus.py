@@ -10,6 +10,7 @@ class Corpus:
         self.word_to_num = dict()
         self.num_to_word = []
         self.docs = []
+        self.num_categories = 4
 
     @classmethod
     def from_file(cls, path):
@@ -93,6 +94,12 @@ class Corpus:
         for word_num in vec:
             vec[word_num] *= self.idf[word_num]
         return vec
+    
+    def clear_vectors(self):
+        del self.df
+        del self.idf
+        del self.vecs
+        del self.l2
 
     def build_vectors(self):
         self.build_idf()
@@ -103,4 +110,16 @@ class Corpus:
             self.l2[i] = helper.l2_norm(self.vecs[i])
 
     def build_naive(self):
-        number_of_occurences = np.zeros((len(self.word_to_num), len(self.docs)))
+        self.number_of_occurences = np.zeros((len(self.word_to_num), self.num_categories), dtype=np.int64)
+        self.class_doc_count = np.zeros(self.num_categories, dtype=np.int64)
+        for doc in self.docs:
+            for word in doc.word_iterator:
+                self.number_of_occurences[word, doc.int_category] += 1
+            self.class_doc_count[doc.int_category] += 1
+        self.class_total_occurences = self.number_of_occurences.sum(axis=0)
+
+    def clear_naive(self):
+        del self.number_of_occurences
+        del self.class_total_occurences
+        #TODO: check again
+

@@ -14,3 +14,11 @@ class Doc:
     @property
     def word_iterator(self):
         return chain(self.title, self.body)
+
+    @property
+    def int_category(self):
+        return int(self.category) - 1
+
+    @staticmethod
+    def int_to_category(c):
+        return c + 1
