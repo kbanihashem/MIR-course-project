@@ -3,6 +3,7 @@ import numpy as np
 
 from corpus import Corpus
 from helper import cosine, most_repeated, sparse_to_numpy, l2_norm
+from document import Doc
 
 class K_eval:
 
@@ -83,7 +84,7 @@ class KNN_euclid(KNN):
 
 class Naive_classifier(K_eval):
 
-    def __init__(self, corpus, alpha=0.01):
+    def __init__(self, corpus, alpha=0.01, **kwargs):
         super().__init__(corpus, **kwargs)
         self.parameters['alpha'] = alpha
 
@@ -92,12 +93,11 @@ class Naive_classifier(K_eval):
         self.q_docs = []
         for query in self.valid[self.q_start:self.q_end]:
             q_doc = self.corpus.doc_from_dict(query, is_query=True)
-            q_docs.append(q_doc)
-        self.q_docs
+            self.q_docs.append(q_doc)
 
-    def eval_queries(self, query_nums, alpha=0.01):
-        for i in query_nums:
-            alpha = self.parameters['alpha']
+    def eval_queries(self):
+        alpha = self.parameters['alpha']
+        for i, q_doc in enumerate(self.q_docs):
             score = np.log(self.corpus.class_doc_count / self.corpus.class_doc_count.sum())
             for word in q_doc.word_iterator:
                 word_score = np.log(
