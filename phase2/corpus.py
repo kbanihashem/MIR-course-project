@@ -6,17 +6,18 @@ from document import Doc
 
 class Corpus:
     
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.word_to_num = dict()
         self.num_to_word = []
         self.docs = []
         self.num_categories = 4
+        self.text_processor_pipeline = kwargs.get('pipeline', [])
 
     @classmethod
-    def from_file(cls, path):
+    def from_file(cls, path, **kwargs):
         with open(path, "r") as f:
             data = json.load(f)
-        return cls.from_dict(data)
+        return cls.from_dict(data, **kwargs)
 
     def doc_from_dict(self, doc, is_query=False):
         document = Doc(
@@ -27,8 +28,8 @@ class Corpus:
         return document
 
     @classmethod
-    def from_dict(cls, data):
-        corpus = cls()
+    def from_dict(cls, data, **kwargs):
+        corpus = cls(**kwargs)
         for doc in data:
             document = corpus.doc_from_dict(doc)
             corpus.add_doc(document)
@@ -56,7 +57,7 @@ class Corpus:
         self.word_to_num[word] = num
 
     def process_text(self, text, nummify=True, add_words_to_list=True, is_query=False):
-        tokenized = helper.tokenize(text)
+        tokenized = helper.tokenize(text, self.text_processor_pipeline)
 
         if is_query:
             vec = []

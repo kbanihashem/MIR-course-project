@@ -1,9 +1,27 @@
 import numpy as np
-def tokenize(text):
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+def remove_stopwords(tokens):
+    return [word for word in tokens if word not in stopwords.words('english')]
+
+def k_stemm(tokens):
+    stemmer = PorterStemmer()
+    return list(map(stemmer.stem, tokens))
+
+def k_lemm(tokens):
+    lemmatizer = WordNetLemmatizer() 
+    return list(map(lemmatizer.lemmatize, tokens))
+
+def tokenize(text, pipeline):
     punctuation_list = ":,.?!*/'\\\""
     for c in punctuation_list:
         text = text.replace(c, ' ')
     tokenized = text.split()
+
+    for func in pipeline:
+        tokenized = func(tokenized)
+
     return tokenized
 
 def vec_dot(v1, v2):

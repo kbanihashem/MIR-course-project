@@ -10,6 +10,9 @@ class K_eval:
     def __init__(self, corpus):
         self.corpus = corpus 
         self.parameters = dict()
+
+    def set_corpus(self, corpus):
+        self.corpus = corpus
     
     def set_valid(self, path):
         with open(path, 'r') as f:
@@ -22,6 +25,9 @@ class K_eval:
         pass
 
     def eval_queries(self):
+        pass
+
+    def pre_build(self):
         pass
 
     @property
@@ -40,11 +46,20 @@ class KNN(K_eval):
     
     def __init__(self, corpus, limit=None, k=1):
         super().__init__(corpus)
-        self.corpus_limit = limit if limit is not None else len(self.corpus.docs)
+        if corpus is not None:
+            self.corpus_limit = limit if limit is not None else len(self.corpus.docs)
         self.parameters['k'] = k
 
+    def set_corpus(self, corpus):
+        self.corpus = corpus
+        self.corpus_limit = limit if limit is not None else len(self.corpus.docs)
+
+    def pre_build(self):
+        self.corpus.build_vectors()
+        self.corpus.build_np_vecs()
+
     def build_valid(self):
-        #requries: corpus.build_vec, corpus.build_np_vec
+        #requries: corpus.build_vectors, corpus.build_np_vec
         q_li = []
         q_l2 = []
         for query in self.valid[self.q_start:self.q_end]:
@@ -88,8 +103,12 @@ class Naive_classifier(K_eval):
         super().__init__(corpus, **kwargs)
         self.parameters['alpha'] = alpha
 
+    def pre_build(self):
+        self.corpus.build_vectors()
+        self.corpus.build_naive()
+
     def build_valid(self):
-        #assumes that corpus.build_vec has been called
+        #assumes that corpus.build_vectors, build_naive has been called
         self.q_docs = []
         for query in self.valid[self.q_start:self.q_end]:
             q_doc = self.corpus.doc_from_dict(query, is_query=True)
