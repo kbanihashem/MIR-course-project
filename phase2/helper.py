@@ -3,7 +3,8 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 
 def remove_stopwords(tokens):
-    return [word for word in tokens if word not in stopwords.words('english')]
+    english_stopwords = set(stopwords.words('english'))
+    return [word for word in tokens if word not in english_stopwords]
 
 def k_stemm(tokens):
     stemmer = PorterStemmer()
