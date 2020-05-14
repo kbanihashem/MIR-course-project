@@ -101,6 +101,7 @@ class Corpus:
         del self.idf
         del self.vecs
         del self.l2
+        del self.y_vec
 
     def build_vectors(self):
         self.build_idf()
@@ -109,6 +110,7 @@ class Corpus:
         for i, doc in enumerate(self.docs):
             self.vecs[i] = self.get_vector(doc)
             self.l2[i] = helper.l2_norm(self.vecs[i])
+        self.y_vec = np.array([doc.int_category for doc in self.docs], dtype=np.int64)
 
     def clear_np(self):
         del self.np_vecs

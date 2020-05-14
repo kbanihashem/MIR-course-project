@@ -21,6 +21,10 @@ class K_eval:
         self.q_end = len(self.valid)
         self.build_valid()
 
+    @property
+    def active_queries(self):
+        return self.valid[self.q_start:self.q_end]
+
     def build_valid(self):
         pass
 
