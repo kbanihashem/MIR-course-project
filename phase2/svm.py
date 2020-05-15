@@ -1,14 +1,13 @@
 import numpy as np
 from sklearn.svm import LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 
 from k_eval import K_eval
 from helper import sparse_to_numpy
 
-class SVM(K_eval):
-
-    def __init__(self, corpus, C=1, **kwargs):
+class SKLearn_Classifier(K_eval):
+    def __init__(self, corpus, **kwargs):
         super().__init__(corpus, **kwargs)
-        self.parameters['C'] = C
         self.corpus_limit = len(self.corpus.docs)
 
     def pre_build(self):
@@ -16,10 +15,13 @@ class SVM(K_eval):
         self.corpus.build_np_vecs()
         self.fit_corpus()
 
+    def build_model(self):
+        pass
+
     def fit_corpus(self):
         X = self.corpus.np_vecs[:self.corpus_limit]
         y = self.corpus.y_vec[:self.corpus_limit]
-        self.model = LinearSVC(random_state=0, tol=1e-5, C=self.parameters['C'])
+        self.build_model()
         self.model.fit(X, y)
     
     def build_valid(self):
@@ -38,3 +40,21 @@ class SVM(K_eval):
 
     def eval_queries(self):
         self.query_ans = self.model.predict(self.q_matrix) + 1
+
+class SVM(SKLearn_Classifier):
+
+    def __init__(self, corpus, C=1, **kwargs):
+        super().__init__(corpus, **kwargs)
+        self.parameters['C'] = C
+
+    def build_model(self):
+        self.model = LinearSVC(random_state=0, tol=1e-5, C=self.parameters['C'])
+
+class Forest(SKLearn_Classifier):
+    def __init__(self, corpus, tree_count=100, max_depth=None, **kwargs):
+        super().__init__(corpus, **kwargs)
+        self.parameters['tree_count'] = tree_count
+        self.parameters['max_depth'] = max_depth
+
+    def build_model(self):
+        self.model = RandomForestClassifier(n_estimators=self.parameters['tree_count'], max_depth=self.parameters['max_depth'], random_state=0)
