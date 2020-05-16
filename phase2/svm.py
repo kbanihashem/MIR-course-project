@@ -48,6 +48,7 @@ class SVM(SKLearn_Classifier):
         self.parameters['C'] = C
 
     def build_model(self):
+        print('building with', self.parameters)
         self.model = LinearSVC(random_state=0, tol=1e-5, C=self.parameters['C'])
 
 class Forest(SKLearn_Classifier):
@@ -57,4 +58,5 @@ class Forest(SKLearn_Classifier):
         self.parameters['max_depth'] = max_depth
 
     def build_model(self):
+        print('building with', self.parameters)
         self.model = RandomForestClassifier(n_estimators=self.parameters['tree_count'], max_depth=self.parameters['max_depth'], random_state=0)

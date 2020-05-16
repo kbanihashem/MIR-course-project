@@ -40,6 +40,19 @@ class K_eval:
     def pre_build(self):
         pass
 
+    def fill_amalkard(self):
+        #confusion matrix
+        self.confusion_matrix = np.zeros((4, 4), dtype=np.int64)
+        for i in range(self.active_query_count):
+            real = self.active_queries[i]['category'] - 1
+            pred = self.query_ans[i] - 1
+            self.confusion_matrix[pred, real] += 1
+        self.accuracy = self.confusion_matrix.trace() / self.confusion_matrix.sum()
+        self.precision = self.confusion_matrix.diagnol() / self.confusion_matrix.sum(axis=1)
+        self.recall = self.confusion_matrix.diagnol() / self.confusion_matrix.sum(axis=0)
+        self.f1 = 2 * self.precision * self.recall / (self.precision + self.recall)
+        self.macro_averaged_f1 = self.f1.mean()
+
     @property
     def active_query_count(self):
         return self.q_end - self.q_start
@@ -50,6 +63,7 @@ class K_eval:
         self.log = []
         for i, query in enumerate(self.valid[self.q_start:self.q_end]):
             self.log.append(query['category'] == self.query_ans[i])
+        self.fill_amalkard()
         return self.log
 
 class KNN(K_eval):
