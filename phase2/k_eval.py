@@ -13,6 +13,12 @@ class K_eval:
 
     def set_corpus(self, corpus):
         self.corpus = corpus
+
+    def set_singular_valid(self, doc):
+        self.valid = [doc]
+        self.q_start = 0
+        self.q_end = 1
+        self.build_valid()
     
     def set_valid(self, path):
         with open(path, 'r') as f:
