@@ -13,6 +13,10 @@ class Corpus:
         self.num_categories = 4
         self.text_processor_pipeline = kwargs.get('pipeline', [])
 
+    def __iter__(self):
+        for doc in self.docs:
+            yield list(map(lambda i: self.num_to_word[i], doc.word_iterator))
+
     @classmethod
     def from_file(cls, path, **kwargs):
         with open(path, "r") as f:
