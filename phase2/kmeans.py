@@ -38,7 +38,7 @@ class Shower:
 
     def set_vectors(self, vecs):
         self.vecs = vecs
-        self.tsne = TSNE(n_components=2)
+        self.tsne = TSNE(n_components=2, n_iter=3000)
 
     def set_indexes(self, indexes):
         self.indexes = indexes
