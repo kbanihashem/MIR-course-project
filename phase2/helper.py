@@ -6,6 +6,15 @@ def remove_stopwords(tokens):
     english_stopwords = set(stopwords.words('english'))
     return [word for word in tokens if word not in english_stopwords]
 
+def dist_euclid(x, y):
+    xy = np.dot(x, y.T)
+    x2 = np.sum(x**2, axis=1)
+    y2 = np.sum(y**2, axis=1)
+    return -2 * xy + x2[:,None] + y2
+
+def dist_cosine(x, y):
+    return -x.dot(y.T)
+
 def k_stemm(tokens):
     stemmer = PorterStemmer()
     return list(map(stemmer.stem, tokens))

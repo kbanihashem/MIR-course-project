@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+from helper import dist_euclid
 
 class Kmeans:
 
@@ -16,10 +17,7 @@ class Kmeans:
     def fill_dist(self):
         x = self.vecs
         y = self.centers
-        xy = np.dot(x, y.T)
-        x2 = np.sum(x**2, axis=1)
-        y2 = np.sum(y**2, axis=1)
-        self.dists = -2 * xy + x2[:,None] + y2
+        self.dists = dist_euclid(x, y)
 
     def assign_labels(self):
         self.fill_dist()

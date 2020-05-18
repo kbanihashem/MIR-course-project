@@ -2,14 +2,15 @@ import json
 import numpy as np
 
 from corpus import Corpus
-from helper import cosine, most_repeated, sparse_to_numpy, l2_norm
+from helper import most_repeated, sparse_to_numpy, l2_norm, dist_euclid, dist_cosine
 from document import Doc
 
 class K_eval:
 
-    def __init__(self, corpus):
+    def __init__(self, corpus, limit=None):
         self.corpus = corpus 
         self.parameters = dict()
+        self.limit = limit
 
     def set_corpus(self, corpus):
         self.corpus = corpus
@@ -26,6 +27,14 @@ class K_eval:
         self.q_start = 0
         self.q_end = len(self.valid)
         self.build_valid()
+
+    @property
+    def limit(self):
+        return len(self.corpus.docs) if self._limit is None else self._limit
+
+    @limit.setter
+    def limit(self, value):
+        self._limit = value
 
     @property
     def active_queries(self):
@@ -48,8 +57,8 @@ class K_eval:
             pred = self.query_ans[i] - 1
             self.confusion_matrix[pred, real] += 1
         self.accuracy = self.confusion_matrix.trace() / self.confusion_matrix.sum()
-        self.precision = self.confusion_matrix.diagnol() / self.confusion_matrix.sum(axis=1)
-        self.recall = self.confusion_matrix.diagnol() / self.confusion_matrix.sum(axis=0)
+        self.precision = self.confusion_matrix.diagonal() / self.confusion_matrix.sum(axis=1)
+        self.recall = self.confusion_matrix.diagonal() / self.confusion_matrix.sum(axis=0)
         self.f1 = 2 * self.precision * self.recall / (self.precision + self.recall)
         self.macro_averaged_f1 = self.f1.mean()
 
@@ -61,22 +70,16 @@ class K_eval:
         self.query_ans = [None] * self.active_query_count
         self.eval_queries()
         self.log = []
-        for i, query in enumerate(self.valid[self.q_start:self.q_end]):
+        for i, query in enumerate(self.active_queries):
             self.log.append(query['category'] == self.query_ans[i])
         self.fill_amalkard()
         return self.log
 
 class KNN(K_eval):
     
-    def __init__(self, corpus, limit=None, k=1):
-        super().__init__(corpus)
-        if corpus is not None:
-            self.corpus_limit = limit if limit is not None else len(self.corpus.docs)
+    def __init__(self, corpus, k=1, **kwargs):
+        super().__init__(corpus, **kwargs)
         self.parameters['k'] = k
-
-    def set_corpus(self, corpus):
-        self.corpus = corpus
-        self.corpus_limit = limit if limit is not None else len(self.corpus.docs)
 
     def pre_build(self):
         self.corpus.build_vectors()
@@ -107,8 +110,8 @@ class KNN_cosine(KNN):
         super().__init__(corpus, **kwargs)
 
     def fill_product_matrix(self):
-        limit = self.corpus_limit
-        self.product = -np.dot(self.q_matrix, self.corpus.np_vecs[:limit,:].T) / self.corpus.l2[:limit]
+        limit = self.limit
+        self.product = dist_cosine(self.q_matrix[self.q_start:self.q_end,:], self.corpus.np_vecs[:limit])
 
 class KNN_euclid(KNN):
     
@@ -116,10 +119,8 @@ class KNN_euclid(KNN):
         super().__init__(corpus, **kwargs)
 
     def fill_product_matrix(self):
-        limit = self.corpus_limit
-        xy = np.dot(self.q_matrix, self.corpus.np_vecs[:limit,:].T) / self.corpus.l2[:limit]
-        self.product = -2 * xy + self.corpus.l2[:limit]
-
+        limit = self.limit
+        self.product = dist_euclid(self.q_matrix[self.q_start:self.q_end,:], self.corpus.np_vecs[:limit])
 
 class Naive_classifier(K_eval):
 
@@ -134,7 +135,7 @@ class Naive_classifier(K_eval):
     def build_valid(self):
         #assumes that corpus.build_vectors, build_naive has been called
         self.q_docs = []
-        for query in self.valid[self.q_start:self.q_end]:
+        for query in self.active_queries:
             q_doc = self.corpus.doc_from_dict(query, is_query=True)
             self.q_docs.append(q_doc)
 
