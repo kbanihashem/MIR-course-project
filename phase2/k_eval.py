@@ -111,7 +111,7 @@ class KNN_cosine(KNN):
 
     def fill_product_matrix(self):
         limit = self.limit
-        self.product = dist_cosine(self.q_matrix[self.q_start:self.q_end,:], self.corpus.np_vecs[:limit])
+        self.product = dist_cosine(self.q_matrix[self.q_start:self.q_end,:], self.corpus.np_vecs[:limit], self.corpus.l2[:limit])
 
 class KNN_euclid(KNN):
     

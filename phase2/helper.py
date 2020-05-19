@@ -12,8 +12,8 @@ def dist_euclid(x, y):
     y2 = np.sum(y**2, axis=1)
     return -2 * xy + x2[:,None] + y2
 
-def dist_cosine(x, y):
-    return -x.dot(y.T)
+def dist_cosine(x, y, l2=1):
+    return -x.dot(y.T) / l2
 
 def k_stemm(tokens):
     stemmer = PorterStemmer()
