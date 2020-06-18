@@ -6,3 +6,4 @@ __pycache__/
 *.dat
 comp/
 test/
+*.json
