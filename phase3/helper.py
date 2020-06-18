@@ -22,7 +22,9 @@ class Parser:
 
     @staticmethod
     def get_references(response):
-        return response.css("div#references h2.citation__title a::attr(href)").getall()
+        raw_urls = response.css("div#references h2.citation__title a::attr(href)").getall()
+        full_urls = list(map(lambda url: response.urljoin(url), raw_urls))
+        return full_urls
 
     @staticmethod
     def get_id(response):
@@ -40,3 +42,4 @@ class Parser:
                 }
         
         return {name:func(response) for name, func in funcs.items()}
+
