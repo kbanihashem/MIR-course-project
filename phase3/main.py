@@ -62,10 +62,13 @@ def add_pagerank(es, index_name=INDEX_NAME, alpha=0.1):
     P = build_graph(es, doc_ids, index_name, alpha)
     v = get_pagerank(P)
     pagerank_by_id = {doc_id:v[i] for i, doc_id in enumerate(doc_ids)}
+    min_page_rank = min(pagerank_by_id.values())
+    max_page_rank = max(pagerank_by_id.values())
+    pagerank_by_id = {doc_id: (v - min_page_rank) / (max_page_rank - min_page_rank) for doc_id, v in pagerank_by_id.items()}
     es.update_by_query(INDEX_NAME, {"script":{"source":"ctx._source.paper.page_rank = params.pagerank[ctx._id]", "params": {"pagerank": pagerank_by_id}}})
 
 #https://www.elastic.co/guide/en/elasticsearch/guide/current/query-time-boosting.html
-def query(es, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abstract=1, w_year=1, index_name=INDEX_NAME):
+def query(es, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abstract=1, w_year=1, w_page_rank=1, index_name=INDEX_NAME):
     query = {
             'query': {
                 'bool': {
@@ -98,20 +101,71 @@ def query(es, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abs
                     }
                 }
             }
+    #es.search({'query': {'script_score': {'query': {'match_all': {}}, 'script': {'source': 'saturation(doc["paper.page_rank"].value, 1)'}}}}, INDEX _NAME)
     number_of_docs = 2000
     if use_page_rank:
         query['query']['bool']['should'].append(
                 {
-                    'rank_feature': {
-                        'field': 'page_rank',
-                        'log': {
-                            'scaling_factor': 0
+                    'script_score': {
+                        'query': {'match_all': {}},
+                        'script': {
+                            'source': 'saturation(doc["paper.page_rank"].value, 1)',
                             },
-                        'boost': 10,
-                        }
+                        'boost': w_page_rank,
+                        },
                     }
                 )
-    return es.search(query, INDEX_NAME, size=10)['hits']['hits']
+    return es.search(query, index_name, size=10)['hits']['hits']
+
+def get_author_graph(es, index_name=INDEX_NAME):
+    doc_ids = get_all_ids(es)
+    docs = dict()
+    neighbors = dict()
+    for i, doc_id in enumerate(doc_ids):
+        docs[doc_id] = es.get(index_name, doc_id)['_source']['paper']
+        neighbors[doc_id] = set(list(map(lambda link: link.split('/')[-1], docs[doc_id]['references'])))
+    adj = dict()
+    for doc_id, doc in docs.items():
+        for author in doc['authors']:
+            a = author.lower()
+            adj[a] = []
+            for neighbor in map(lambda x: docs.get(x), neighbors[doc_id]):
+                #not in database case
+                if neighbor is None:
+                    continue
+                for other in neighbor['authors']:
+                    b = other.lower()
+                    adj[a].append(b)
+    return adj
+
+def calc_hits(es, top_k=10, index_name=INDEX_NAME, repeat_count=5):
+    doc_ids = get_all_ids(es)
+    author_graph = get_author_graph(es, index_name)
+    i_to_author = list(author_graph)
+    author_to_i = {author: i for i, author in enumerate(author_graph)}
+    n = len(i_to_author)
+    adj = [[] for _ in range(n)]
+    for i, author in enumerate(i_to_author):
+        for j in map(lambda x: author_to_i[x], author_graph[author]):
+            adj[i].append(j)
+    a = np.ones(n)
+    h = np.ones(n)
+    li = []
+    all_edges = [(i, j) for i in range(n) for j in adj[i]]
+    for repeat in range(repeat_count):
+        new_a = np.zeros(n)
+        new_h = np.zeros(n)
+        for i ,j in all_edges:
+            new_h[i] += a[j]
+            new_a[j] += h[i]
+        
+        a = new_a
+        h = new_h
+        a *= n / a.sum()
+        h *= n / h.sum()
+        li.append((a, h))
+    top_author_index = np.argsort(-a)[:top_k]
+    return list(map(lambda i: i_to_author[i], top_author_index))
 
 #es.update_by_query(INDEX_NAME, {"script":{"source":"ctx._source.paper.hasan = params.count[ctx._id]", "params": {"count": kiarash}}})
 
