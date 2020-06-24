@@ -61,5 +61,5 @@ if __name__ == '__main__':
             'https://www.semanticscholar.org/paper/BERT%3A-Pre-training-of-Deep-Bidirectional-for-Devlin-Chang/df2b0e26d0599ce3e70df8a9da02e51594e0e992',
             'https://www.semanticscholar.org/paper/The-Lottery-Ticket-Hypothesis%3A-Training-Pruned-Frankle-Carbin/f90720ed12e045ac84beb94c27271d6fb8ad48cf',
             ]
-    crawl_limit = 20
+    crawl_limit = 2000
     crawl(start_urls, crawl_limit, verbose=True)
