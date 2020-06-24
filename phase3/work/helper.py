@@ -1,3 +1,9 @@
+from elasticsearch import Elasticsearch
+
+def get_es(address):
+    #TODO
+    return Elasticsearch()
+
 class Parser:
 
     @staticmethod
