@@ -1,34 +1,42 @@
+from elasticsearch import Elasticsearch
+
+def get_es(address):
+    #TODO
+    return Elasticsearch()
+
 class Parser:
 
     @staticmethod
     def get_abstract(response):
-        return response.css("meta[name='description']::attr(content)").get()
+        ans =  response.css("meta[name='description']::attr(content)").get()
+        return ans if ans is not None else ""
 
     @staticmethod
     def get_title(response):
-        return response.css("meta[name='citation_title']::attr(content)").get()
+        ans =  response.css("meta[name='citation_title']::attr(content)").get()
+        return ans if ans is not None else ""
 
     @staticmethod
     def get_date(response):
-        return response.css("meta[name='citation_publication_date']::attr(content)").get()
+        ans =  response.css("meta[name='citation_publication_date']::attr(content)").get()
+        return ans if ans is not None else ""
 
     @staticmethod
     def get_authors(response):
-        return response.css("meta[name='citation_author']::attr(content)").getall()
-
-    @staticmethod
-    def get_citations(response):
-        return response.css("response.css('h2.citation__title a::attr(href)').getall()").getall()
+        ans =  response.css("meta[name='citation_author']::attr(content)").getall()
+        return ans if ans is not None else []
 
     @staticmethod
     def get_references(response):
         raw_urls = response.css("div#references h2.citation__title a::attr(href)").getall()
         full_urls = list(map(lambda url: response.urljoin(url), raw_urls))
-        return full_urls
+        ans =  full_urls
+        return ans if ans is not None else []
 
     @staticmethod
     def get_id(response):
-        return response.url.split('/')[-1] 
+        ans =  response.url.split('/')[-1] 
+        return ans
 
     @staticmethod
     def get_all_info(response):
@@ -40,6 +48,10 @@ class Parser:
                 'abstract': Parser.get_abstract,
                 'references': Parser.get_references,
                 }
-        
+
         return {name:func(response) for name, func in funcs.items()}
 
+#    @staticmethod
+#    def get_citations(response):
+#        ans =  response.css("response.css('h2.citation__title a::attr(href)').getall()").getall()
+#        return ans if ans is not None else []
