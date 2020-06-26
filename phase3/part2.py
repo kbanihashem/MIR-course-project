@@ -5,6 +5,7 @@ from elasticsearch import helpers
 from helper import get_es
 INDEX_NAME = 'paper_index'
 
+#part 2
 def clear_index(address, index_name=INDEX_NAME):
     es = get_es(address)
     es.indices.delete(index_name)
@@ -32,21 +33,21 @@ def get_bulk(data, index_name=INDEX_NAME):
             ]
         
 
-def get_all_ids(address, index_name=INDEX_NAME):
-    es = get_es(address)
+#part 3
+def get_all_ids(es, index_name=INDEX_NAME):
     scroll = helpers.scan(es, query={"_source":False, "query":{"match_all": {}}}, index=index_name, scroll='10s')
     return list(map(lambda e: e['_id'], scroll))
 
-def get_neighbors(es, doc_id, index_name=INDEX_NAME):
+def get_neighbor_ids(es, doc_id, index_name=INDEX_NAME):
     return list(map(lambda link: link.split('/')[-1], es.get(index=index_name, id=doc_id)['_source']['paper']['references'])) 
 
-def build_graph(es, doc_ids, index_name=INDEX_NAME, alpha=0.9):
+def get_transition_matrix(es, doc_ids, index_name=INDEX_NAME, alpha=0.9):
     id_to_i = {doc_id: i for i, doc_id in enumerate(doc_ids)}
     n = len(doc_ids)
     P = np.zeros((n, n))
     v = np.ones(n)/n
     for i, doc_id in enumerate(doc_ids):
-        neighbor_is = [id_to_i[neighbor] for neighbor in get_neighbors(es, doc_id, index_name) if neighbor in id_to_i]
+        neighbor_is = [id_to_i[neighbor] for neighbor in get_neighbor_ids(es, doc_id, index_name) if neighbor in id_to_i]
         if neighbor_is == []:
             P[i,:] = v
         else:
@@ -56,26 +57,23 @@ def build_graph(es, doc_ids, index_name=INDEX_NAME, alpha=0.9):
             P[i,:] += alpha * v
     return P
 
-def get_pagerank(P):
+def calc_pagerank_vector(P):
     eigenvalues, eigenvectors = np.linalg.eig(P.T)
     v = np.real(eigenvectors.T[np.argmax(eigenvalues)])
     return v/v.sum()
 
-def add_doc_field(es, doc_id, field_name, field_value, index_name=INDEX_NAME):
-    es.update(INDEX_NAME, doc_id, {"script":{"source":f"ctx._source.paper.{field_name} = params.value", "params": {"value": field_value}}})
-
-def add_pagerank(es, index_name=INDEX_NAME, alpha=0.1):
+def add_pagerank(address, index_name=INDEX_NAME, alpha=0.1):
+    es = get_es(address)
     doc_ids = get_all_ids(es, index_name)
-    P = build_graph(es, doc_ids, index_name, alpha)
-    v = get_pagerank(P)
-    pagerank_by_id = {doc_id:v[i] for i, doc_id in enumerate(doc_ids)}
-    min_page_rank = min(pagerank_by_id.values())
-    max_page_rank = max(pagerank_by_id.values())
-    pagerank_by_id = {doc_id: (v - min_page_rank) / (max_page_rank - min_page_rank) for doc_id, v in pagerank_by_id.items()}
+    P = get_transition_matrix(es, doc_ids, index_name, alpha)
+    v = calc_pagerank_vector(P)
+    pagerank_by_id = {doc_id: v[i] for i, doc_id in enumerate(doc_ids)}
     es.update_by_query(INDEX_NAME, {"script":{"source":"ctx._source.paper.page_rank = params.pagerank[ctx._id]", "params": {"pagerank": pagerank_by_id}}})
 
+#part4
 #https://www.elastic.co/guide/en/elasticsearch/guide/current/query-time-boosting.html
-def query(es, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abstract=1, w_year=1, w_page_rank=1, index_name=INDEX_NAME):
+def query(address, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abstract=1, w_year=1, w_page_rank=10, index_name=INDEX_NAME):
+    es = get_es(address)
     query = {
             'query': {
                 'bool': {
@@ -108,7 +106,6 @@ def query(es, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abs
                     }
                 }
             }
-    #es.search({'query': {'script_score': {'query': {'match_all': {}}, 'script': {'source': 'saturation(doc["paper.page_rank"].value, 1)'}}}}, INDEX _NAME)
     number_of_docs = 2000
     if use_page_rank:
         query['query']['bool']['should'].append(
@@ -122,8 +119,10 @@ def query(es, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abs
                         },
                     }
                 )
-    return es.search(query, index_name, size=10)['hits']['hits']
+    ans = es.search(query, index_name, size=10)['hits']['hits']
+    return list(map(lambda doc: doc['_source']['paper'], ans))
 
+#part5
 def get_author_graph(es, index_name=INDEX_NAME):
     doc_ids = get_all_ids(es)
     docs = dict()
@@ -145,7 +144,8 @@ def get_author_graph(es, index_name=INDEX_NAME):
                     adj[a].append(b)
     return adj
 
-def calc_hits(es, top_k=10, index_name=INDEX_NAME, repeat_count=5):
+def calc_hits(address, top_k=10, index_name=INDEX_NAME, repeat_count=5):
+    es = get_es(address)
     doc_ids = get_all_ids(es)
     author_graph = get_author_graph(es, index_name)
     i_to_author = list(author_graph)
@@ -172,7 +172,11 @@ def calc_hits(es, top_k=10, index_name=INDEX_NAME, repeat_count=5):
         h *= n / h.sum()
         li.append((a, h))
     top_author_index = np.argsort(-a)[:top_k]
-    return list(map(lambda i: i_to_author[i], top_author_index))
+    return list(map(lambda i: (i_to_author[i], a[i]), top_author_index))
 
 #es.update_by_query(INDEX_NAME, {"script":{"source":"ctx._source.paper.hasan = params.count[ctx._id]", "params": {"count": kiarash}}})
 
+#def add_doc_field(es, doc_id, field_name, field_value, index_name=INDEX_NAME):
+#    es.update(INDEX_NAME, doc_id, {"script":{"source":f"ctx._source.paper.{field_name} = params.value", "params": {"value": field_value}}})
+
+    #es.search({'query': {'script_score': {'query': {'match_all': {}}, 'script': {'source': 'saturation(doc["paper.page_rank"].value, 1)'}}}}, INDEX _NAME)
