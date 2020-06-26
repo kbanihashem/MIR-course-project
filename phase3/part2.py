@@ -134,14 +134,15 @@ def get_author_graph(es, index_name=INDEX_NAME):
     for doc_id, doc in docs.items():
         for author in doc['authors']:
             a = author.lower()
-            adj[a] = []
+            if a not in adj:
+                adj[a] = set()
             for neighbor in map(lambda x: docs.get(x), neighbors[doc_id]):
                 #not in database case
                 if neighbor is None:
                     continue
                 for other in neighbor['authors']:
                     b = other.lower()
-                    adj[a].append(b)
+                    adj[a].add(b)
     return adj
 
 def calc_hits(address, top_k=10, index_name=INDEX_NAME, repeat_count=5):
@@ -158,7 +159,7 @@ def calc_hits(address, top_k=10, index_name=INDEX_NAME, repeat_count=5):
     a = np.ones(n)
     h = np.ones(n)
     li = []
-    all_edges = [(i, j) for i in range(n) for j in adj[i]]
+    all_edges = set([(i, j) for i in range(n) for j in adj[i]])
     for repeat in range(repeat_count):
         new_a = np.zeros(n)
         new_h = np.zeros(n)
@@ -168,8 +169,8 @@ def calc_hits(address, top_k=10, index_name=INDEX_NAME, repeat_count=5):
         
         a = new_a
         h = new_h
-        a *= n / a.sum()
-        h *= n / h.sum()
+        a *= 1 / a.sum()
+        h *= 1 / h.sum()
         li.append((a, h))
     top_author_index = np.argsort(-a)[:top_k]
     return list(map(lambda i: (i_to_author[i], a[i]), top_author_index))
