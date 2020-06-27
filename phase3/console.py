@@ -50,7 +50,12 @@ def add_pagerank_menu():
     print('Example input:')
     print('localhost:9200')
     address = input()
-    add_pagerank(address)
+    print('enter alpha')
+    alpha = float(input())
+    if alpha <= 0 or alpha >= 1:
+        print('alpha should be in (0, 1)')
+        return
+    add_pagerank(address, alpha=alpha)
 
 def search_menu():
     print('enter address in the following format: address:port')

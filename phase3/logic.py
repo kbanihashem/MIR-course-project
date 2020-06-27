@@ -35,8 +35,11 @@ def get_bulk(data, index_name=INDEX_NAME):
 
 #part 3
 def get_all_ids(es, index_name=INDEX_NAME):
-    scroll = helpers.scan(es, query={"_source":False, "query":{"match_all": {}}}, index=index_name, scroll='10s')
-    return list(map(lambda e: e['_id'], scroll))
+    if es.indices.exists(index=index_name):
+        scroll = helpers.scan(es, query={"_source":False, "query":{"match_all": {}}}, index=index_name, scroll='10s')
+        return list(map(lambda e: e['_id'], scroll))
+    else:
+        return []
 
 def get_doc_count(address, index_name=INDEX_NAME):
     es = get_es(address)
