@@ -38,6 +38,11 @@ def get_all_ids(es, index_name=INDEX_NAME):
     scroll = helpers.scan(es, query={"_source":False, "query":{"match_all": {}}}, index=index_name, scroll='10s')
     return list(map(lambda e: e['_id'], scroll))
 
+def get_doc_count(address, index_name=INDEX_NAME):
+    es = get_es(address)
+    return len(get_all_ids(es, index_name))
+
+
 def get_neighbor_ids(es, doc_id, index_name=INDEX_NAME):
     return list(map(lambda link: link.split('/')[-1], es.get(index=index_name, id=doc_id)['_source']['paper']['references'])) 
 
