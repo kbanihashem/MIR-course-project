@@ -72,10 +72,16 @@ def get_transition_matrix(es, doc_ids, index_name=INDEX_NAME, alpha=0.9):
             P[i,:] += alpha * v
     return P
 
-def calc_pagerank_vector(P):
-    eigenvalues, eigenvectors = np.linalg.eig(P.T)
-    v = np.real(eigenvectors.T[np.argmax(eigenvalues)])
-    return v/v.sum()
+def calc_pagerank_vector(P, convergance_threshold=1e-10):
+    n = P.shape[0]
+    v = np.ones(n) / n
+    while True:
+        vp = P.T.dot(v)
+        vp /= vp.sum()
+        if np.sum(np.abs(vp - v)) < convergance_threshold:
+            break
+        v = vp
+    return v
 
 def add_pagerank(address, index_name=INDEX_NAME, alpha=0.1):
     es = get_es(address)
