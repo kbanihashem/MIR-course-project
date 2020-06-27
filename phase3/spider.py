@@ -45,8 +45,9 @@ class MySpider(scrapy.Spider):
             print(*args, **kwargs)
 
 def crawl(start_urls, crawl_limit=2000, output_path='quotes.json', verbose=False):
-#    MySpider.start_urls = start_urls
-#    MySpider.crawl_limit = crawl_limit
+    #clearing the file
+    with open(output_path, 'w') as f:
+        pass
     process = CrawlerProcess(settings={
         "FEEDS": {
             output_path: {"format": "json"},

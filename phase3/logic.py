@@ -31,6 +31,13 @@ def get_bulk(data, index_name=INDEX_NAME):
                 '_source': {'paper': d},
                 } for i, d in enumerate(data)
             ]
+
+def get_first_doc(address, index_name=INDEX_NAME):
+    es = get_es(address)
+    all_ids = get_all_ids(es, index_name)
+    if len(all_ids) == 0:
+        return "No docs in index"
+    return es.get(index_name, all_ids[0])
         
 
 #part 3

@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import os
 
 from logic import (
         clear_index,
@@ -8,6 +9,7 @@ from logic import (
         query, 
         calc_hits,
         get_doc_count,
+        get_first_doc,
         )
 from spider import crawl
 
@@ -103,6 +105,18 @@ def get_doc_count_menu():
     address = input()
     print(get_doc_count(address))
 
+def show_structure():
+    print('enter address in the following format: address:port')
+    print('Example input:')
+    print('localhost:9200')
+    address = input()
+    doc = get_first_doc(address)
+    print("Here's the first doc in index")
+    print(doc)
+
+def clear_screen():
+    os.system('clear') 
+
 def exit_function():
     sys.exit(0)
 
@@ -115,6 +129,8 @@ commands = {
         'search': search_menu,
         'get_HITS': calc_hits_menu,
         'exit': exit_function,
+        'show_structure': show_structure,
+        'clear_screen': clear_screen,
         }
 
 while True:
