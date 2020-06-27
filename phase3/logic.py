@@ -87,7 +87,7 @@ def add_pagerank(address, index_name=INDEX_NAME, alpha=0.1):
 
 #part4
 #https://www.elastic.co/guide/en/elasticsearch/guide/current/query-time-boosting.html
-def query(address, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abstract=1, w_year=1, w_page_rank=10, index_name=INDEX_NAME):
+def query(address, q_title, q_abstract, q_year, use_page_rank=False, w_title=1, w_abstract=1, w_year=1, w_page_rank=1000, index_name=INDEX_NAME):
     es = get_es(address)
     query = {
             'query': {

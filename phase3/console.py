@@ -91,7 +91,12 @@ def search_menu():
     print('Do you want the full thing? (enter yes for yes!)')
     full = input().lower() == 'yes'
     if full:
-        print(ans)
+        for i, doc in enumerate(ans):
+            print('result number', i)
+            print('title:', doc['title'])
+            print('abstract:\n', doc['title'])
+            print('authors:\n', ', '.join(doc['authors']))
+            print('publication date', doc['date'])
 
 def calc_hits_menu():
     print('enter address in the following format: address:port')
@@ -101,7 +106,8 @@ def calc_hits_menu():
     print('enter number of authors')
     top_k = int(input())
     hits = calc_hits(address, top_k)
-    print(hits)
+    for i, (a, r) in enumerate(hits):
+        print(f"Author with rank {i}: {a}. Authority score: {r}")
 
 def get_doc_count_menu():
     print('enter address in the following format: address:port')
@@ -118,6 +124,8 @@ def show_structure():
     doc = get_first_doc(address)
     print("Here's the first doc in index")
     print(doc)
+    print('keys for the paper:')
+    print(doc['_source']['paper'].keys())
 
 def clear_screen():
     os.system('clear') 
@@ -132,7 +140,7 @@ commands = {
         'add_data': add_data_menu,
         'add_pagerank': add_pagerank_menu,
         'search': search_menu,
-        'get_HITS': calc_hits_menu,
+        'get_hits': calc_hits_menu,
         'exit': exit_function,
         'show_structure': show_structure,
         'clear_screen': clear_screen,
