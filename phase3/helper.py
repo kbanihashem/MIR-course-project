@@ -1,8 +1,7 @@
 from elasticsearch import Elasticsearch
 
 def get_es(address):
-    #TODO
-    return Elasticsearch()
+    return Elasticsearch(address)
 
 class Parser:
 
