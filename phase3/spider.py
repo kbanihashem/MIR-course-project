@@ -44,7 +44,7 @@ class MySpider(scrapy.Spider):
         if self.verbose:
             print(*args, **kwargs)
 
-def crawl(start_urls, crawl_limit=2000, output_path='quotes.json', verbose=False):
+def crawl(start_urls, crawl_limit=2000, output_path='quotes.json', verbose=True):
     #clearing the file
     with open(output_path, 'w') as f:
         pass
