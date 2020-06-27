@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import os
+from time import time
 
 from logic import (
         clear_index,
@@ -28,8 +29,12 @@ def crawl_menu():
     should_crawl = input().lower() == 'yes'
     if not should_crawl:
         return
+
+    t0 = time()
     crawl(li, crawl_limit=count, output_path=path)
-    print('finished crawling!')
+    t1 = time()
+    total_time = t1 - t0
+    print('finished crawling! It took {total_time} seconds')
 
 def clear_index_menu():
     print('enter address in the following format: address:port')
