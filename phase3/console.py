@@ -34,7 +34,7 @@ def crawl_menu():
     crawl(li, crawl_limit=count, output_path=path)
     t1 = time()
     total_time = t1 - t0
-    print('finished crawling! It took {total_time} seconds')
+    print(f'finished crawling! It took {total_time} seconds')
 
 def clear_index_menu():
     print('enter address in the following format: address:port')
