@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 
-from part2 import (
+from logic import (
         clear_index,
         add_data,
         add_pagerank,
@@ -50,7 +50,7 @@ def add_pagerank_menu():
     print('Example input:')
     print('localhost:9200')
     address = input()
-    add_pagerank()
+    add_pagerank(address)
 
 def search_menu():
     print('enter address in the following format: address:port')
@@ -71,10 +71,11 @@ def search_menu():
     w_date = float(input())
     print('should we use page rank? (enter yes for using)')
     use_page_rank = input().lower() == 'yes'
-    ans = query(address, title, abstract, date, use_page_rank, w_title, w_abstract, w_data)
+    ans = query(address, title, abstract, date, use_page_rank, w_title, w_abstract, w_date)
     print('summary:')
-    summary = list(map(lambda x: (x['title'], x['date'], f"{x['page_rank']:.6f}")))
-    print(summary)
+    keys = 'title', 'date', 'page_rank'
+    summary = list(map(lambda x: tuple([x.get(key) for key in keys]), ans))
+    print('\n'.join(map(str, summary)))
     print('Do you want the full thing? (enter yes for yes!)')
     full = input().lower() == 'yes'
     if full:
